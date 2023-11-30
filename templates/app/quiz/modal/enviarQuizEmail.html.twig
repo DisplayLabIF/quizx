@@ -1,0 +1,24 @@
+<!-- Modal -->
+<div class="modal fade" tabindex="-1" data-backdrop="static" id="modalEviarEmailQuiz{{quiz.quiz.id}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Faça uma lista e envie por email
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <select id="emails-{{quiz.quiz.id}}" class="form-control emails" style="width: 100%;"></select>
+                <small>Separe os e-mails com ';'. Exemplo: joao@gmail.com; maria@gmail.com</small><br>
+                <button  type="submit" value={{quiz.quiz.id}} class="btn_enviar_emails btn btn-default btn-sm"><i class="fas fa-paper-plane mr-1"></i> Enviar</button>
+            </div>
+            <div class="modal-footer">
+                <div class="mr-auto">
+                    <div id="box-enviando-{{quiz.quiz.id}}" style="display: none;">Enviando...</div>
+                </div>
+                <button type="button" class="btn btn-default btn-secondary pr-5 pl-5" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>      

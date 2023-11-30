@@ -1,0 +1,144 @@
+{% extends 'aluno.html.twig' %}
+    
+{% block title %}QuizX - Meu curso {% endblock %}
+
+{% set qtd_aulas_assistidas = matricula.aulasAssistidas|length %}
+
+{% set qtd_aulas = 0 %}
+{% for modulo in curso.modulos %}
+    {% set qtd_aulas = qtd_aulas + modulo.aulas|length %}
+{% endfor %}
+
+{% set porcentagemProgresso = ((qtd_aulas_assistidas * 100) / qtd_aulas) %}
+
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .info-curso{
+            font-size: 15px;
+            line-height: 18px;
+            color: #4A4A4A;
+            margin-bottom: 5px;
+            margin-right: 40px;
+        }
+        .circular{
+            height:60px;
+            width: 60px;
+            position: relative;
+        }
+        .circular .inner{
+            position: absolute;
+            z-index: 6;
+            top: 50%;
+            left: 50%;
+            height: 50px;
+            width: 50px;
+            margin: -25px 0 0 -25px;
+            background: #ffff;
+            border-radius: 100%;
+        }
+        .circular .number{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            z-index:10;
+            font-weight: bold;
+            font-size: 15px;
+            color: #666666;
+        }
+        .circular .bar{
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: #fff7c8;
+            -webkit-border-radius: 100%;
+            clip: rect(0px, 60px, 60px, 30px);
+        }
+        .circle .bar .progress{
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            -webkit-border-radius: 100%;
+            clip: rect(0px, 30px, 60px, 0px);
+            background: #ffe132;
+        }
+        .circle .left .progress{
+            z-index:1;
+            animation: left 0.3s linear both;
+        }
+        @keyframes left{
+            {% if porcentagemProgresso > 50 %}
+                100%{
+                    transform: rotate(180deg);
+                }
+            {% else %}
+                100%{
+                    transform: rotate({{( ( porcentagemProgresso / 100 ) * 360)}}deg);
+                }
+            {% endif %}
+        }
+        .circle .right {
+            transform: rotate(180deg);
+            z-index:3;
+        }
+        .circle .right .progress{
+            animation: right 0.3s linear both;
+            animation-delay:0.3s;
+        }
+        {% if porcentagemProgresso > 50 %}
+            @keyframes right{
+                100%{
+                    transform: rotate({{( ( porcentagemProgresso / 100 ) * 360) - 180}}deg);
+                }
+            }
+        {% endif %}
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <div class="p-4 bg-gray-light">
+        <div class="container">
+         <div class="d-flex flex-row align-items-center flex-wrap mb-2">
+            <div class="circular mr-3">
+                <div class="inner"></div>
+                <div class="number">{{porcentagemProgresso|round}}%</div>
+                <div class="circle">
+                    <div class="bar left">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="bar right">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="m-0">{{curso.nome}}</h1>
+        </div>
+            <div class="d-flex flex-row flex-wrap">
+                <p class="info-curso">
+                    <i class="fas fa-calendar-alt"></i> {{matricula.created|date("d/m/Y")}}
+                </p>
+                <p class="info-curso">
+                    <i class="fas fa-list-ul"></i> {{matricula.turma.curso.modulos|length}} módulos
+                </p>
+                <p class="info-curso">
+                    <i class="fas fa-graduation-cap"></i> {{qtd_aulas}} aulas
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        {{ include('aluno/aula/list-aulas.html.twig', {'matricula': matricula, 'curso': curso }) }}
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

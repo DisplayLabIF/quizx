@@ -1,0 +1,196 @@
+<style>
+
+    .camposConfiguracao:hover{
+        cursor: move;
+    }
+
+    .camposConfiguracao{
+        list-style: none;
+        padding-left: 0px;
+    }
+
+    body.dragging, body.dragging * {
+        cursor: move !important;
+    }
+
+    .dragged {
+        position: absolute;
+        opacity: 0.5;
+        z-index: 2000;
+    }
+
+    ol.example li.placeholder {
+        position: relative;
+        /** More li styles **/
+    }
+    ol.example li.placeholder:before {
+        position: absolute;
+        /** Define arrowhead **/
+    }
+
+    .radio-button-row{
+        display: flex;
+        flex-direction: row;
+    }
+    .form-check-label{
+        margin-right: 10px;
+    }
+    .quais-dados-obter{
+        margin-right: 25px;
+        font-weight: normal;
+    }
+</style>
+{{ form_start(form) }}
+
+    {% set numero_configuracao = 1 %}
+
+    <label>{{numero_configuracao}}. Gostaria de obter alguns dados das pessoas que vão responder o seu quiz?</label>
+    {{ form_row(form.obterDadosRespondente) }}
+    <div id="info-solicitar-dados" class="ml-5" style="display: none;">
+        <label>{{numero_configuracao}}.1. Quais dados?</label>
+        <br>
+        <small>* Clique e arraste, caso desejar alterar a ordem dos campos no seu formulário.</small>
+        <ol class="d-flex flex-row flex-wrap simple_with_animation" style="margin: 0;">
+            <div style="display: none;">
+                {{ form_row(form.ordemCampos) }}
+                {{ form_row(form.ordemCamposArray) }}
+            </div>
+            {% for ordem in form.vars.value.ordemCampos %}
+                <li class="camposConfiguracao">
+                    <a title="Ordem" class="btn-marcador-list">
+                    </a>
+                    {% if ordem.campo == 'Nome' %}
+                        {{ form_row(form.obterNome) }}
+                    {% elseif ordem.campo == 'E-mail' %}
+                        {{ form_row(form.obterEmail) }}
+                    {% elseif ordem.campo == 'Telefone' %}
+                        {{ form_row(form.obterTelefone) }}
+                    {% elseif ordem.campo == 'CPF' %}
+                        {{ form_row(form.obterCpf) }}
+                    {% elseif ordem.campo == 'Cidade' %}
+                        {{ form_row(form.obterCidade) }}
+                    {% endif %}
+                </li>
+                
+                {% for campo in form.camposPersonalizados %}
+                    {% if ordem.campo == campo.vars.label %}
+                        <li class="camposConfiguracao">
+                            <a title="Ordem" class="btn-marcador-list">
+                            </a>
+                            <div class="radio-checkbox-input form-group">
+                                {{ form_label(campo) }}
+                                {{ form_errors(campo) }}
+                                {{ form_widget(campo) }}
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}       
+        </ol>
+        
+        <label>{{numero_configuracao}}.2. Quando deve ser solicitados estes dados ao respondente?</label>
+        {{ form_row(form.quandoObterDados) }}
+    </div>
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. No fim do Quiz, deve ser mostrado  o resultado/nota?</label>
+    {{ form_row(form.mostrarNota) }}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Gostaria de definir um tempo máximo para responder ao Quiz?</label>
+    {{ form_row(form.definirTempoResposta) }}
+    <div id="tempo-maximo-quiz-configuracao" class="ml-5" style="display: none;">
+        <label>{{numero_configuracao}}.1. Qual é o tempo máximo (Informe em minutos)?</label>
+        {{ form_row(form.tempo) }}
+    </div>
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Pode pular questões?</label>
+    {{ form_row(form.podePularQuestao) }}
+
+    {# <label class="mt-2">5. Mostrar questões em ordem aleatória?</label>
+    {{ form_row(form.mostraAleatoria) }} #}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Mostrar se acertou ou errou ao fim de cada questão?</label>
+    {{ form_row(form.mostrarCorrecao) }}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Mostrar gabarito e correção das questões ao fim do Quiz?</label>
+    {{ form_row(form.mostrarGabarito) }}
+
+    {# {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Quer configurar uma página própria (land page) para seus Leads/Alunos respondam ao Quiz? [PRO]</label>
+    {{ form_row(form.configurarLandPage) }} #}
+
+    {% if pontos > 0 %}
+        {% set numero_configuracao = numero_configuracao + 1 %}
+        <label class="mt-2">{{numero_configuracao}}. Seu quiz tem um total de {{ pontos }} pontos, quer definir uma nota mínima para que seja considerado aprovado?</label>
+        {{ form_row(form.definirNotaMinima) }}
+        <div id="nota-minima-quiz-configuracao" class="ml-5" style="display: none;">
+            <label>{{numero_configuracao}}.1. Qual é a nota mínima?</label>
+            {{ form_row(form.notaMinima) }}
+        </div>
+    {% endif %}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Instruções ou observações para resolução do Quiz:</label>
+    {{ form_row(form.observacao) }}
+
+    {% set numero_configuracao = numero_configuracao + 1 %}
+    <label class="mt-2">{{numero_configuracao}}. Adicionar materiais?</label>
+    {{ form_row(form.adicionarMateriais) }}
+    <div id="div-materiais-configuracao-quiz" class="ml-5" style="display: none;">
+        <div 
+            id="materiais-configuracao-quiz"
+            class="materiais"
+            data-prototype="
+                {% apply escape %}
+                    {{ include('app/material/collectionMaterial.html.twig', { 'form': form.materiais.vars.prototype }) }}
+                {% endapply %}"
+        >
+            {% for material in form.materiais %}
+            <div class="row">
+                <div class="col-md-4">
+                    {{ form_row(material.nome) }}
+                </div>
+
+                <div class="col-md-4">
+                    {{ form_row(material.tipo) }}
+                </div>
+                <div style="display: none;">
+                    {{ form_row(material.file) }}
+                    <input 
+                        id="file-upload-{{loop.index -1}}" 
+                        class="file-upload" 
+                        type="file" 
+                        style="display: none;"
+                        {% if material.vars.value.tipo != 'document' %}
+                        accept= "{{material.vars.value.tipo}}/*"
+                        {% endif %}
+                    />
+                </div>
+                <div class="col-md-4">
+                    <label>Arquivo</label>
+                    <div class="d-flex flex-row">  
+                        <label 
+                            id="label-carregar-material-{{loop.index -1}}"
+                            for="file-upload-{{loop.index -1}}"
+                            class="btn shadow-default btn-secondary d-flex align-items-center justify-content-center"
+                            style="min-height: 50px; width: 100%;"
+                        >
+                            Arquivo
+                        </label>
+                        <a href="#" id="deletaMaterial"class="remove-material btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="#" class="add_material_link btn btn-lg btn-default shadow-default flex-center-default" style="width: 151px; font-weight: bold;">Novo Material</a>
+    </div>
+    </br>
+    {{ form_row(form.finalizar) }}
+{{ form_end(form) }}

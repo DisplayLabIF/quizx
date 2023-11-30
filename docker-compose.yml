@@ -1,0 +1,68 @@
+version: "3.7"
+services:
+  db_quizx:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    restart: on-failure
+    tty: true
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d/:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: quizx
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: root
+    networks:
+      - quizx
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: on-failure
+    environment:
+      PMA_HOST: db_quizx
+      MYSQL_ROOT_PASSWORD: root
+      UPLOAD_LIMIT: 300000000
+    ports:
+      - 9020:80
+    depends_on:
+      - db_quizx
+    networks:
+      - quizx
+
+  nginx:
+    image: nginx:1.15.3-alpine
+    restart: on-failure
+    volumes:
+      - "./public/:/usr/src/app"
+      - "./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro"
+    ports:
+      - "9010:80"
+    depends_on:
+      - quizx
+    networks:
+      - quizx
+
+  quizx:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: on-failure
+    #entrypoint: dockerize -template ./docker/app/.env:.env -template ./docker/app/.env.test:.env.test -wait tcp://db_quizx:3306 -timeout 40s  ./docker/app/entrypoint.sh
+    environment:
+      DB_HOST: db_quizx
+      DB_DATABASE: quizx
+    volumes:
+      - ".:/usr/src/app"
+      - "./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+    #env_file:
+    #  - .env
+    user: 1000:1000
+    networks:
+      - quizx
+
+networks:
+  quizx:
+    driver: bridge
+

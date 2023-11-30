@@ -1,0 +1,38 @@
+<div class="card border-radius shadow-default">
+        <label id="endereco-{{index}}" class="card-header btn btn-block d-flex justify-content-between" style="height: 100%;"data-toggle="collapse" data-target="#endereco-collapse-{{index}}" aria-expanded="true" aria-controls="endereco-collapse-{{index}}">
+            <span>Novo endereço #{{index}}</span>
+            <a href="#" id="deletaEndereco" class="remove-endereco btn shadow-default btn-danger ml-2" style="height: 38px;"><i class="fas fa-trash"></i></a>
+        </label>
+
+    <div id="endereco-collapse-{{index}}" class="collapse show" aria-labelledby="endereco-{{index}}" data-parent="#meusDados-enderecos-accordion">
+        <div class="card-body">
+            <div class="row">
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.cep) }}
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.cidade) }}
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.estado) }}
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.logradouro) }}
+                    </div>            
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.bairro) }}
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        {{ form_row(endereco.numero) }}
+                    </div>
+                    <div class="col-12 ">
+                        {{ form_row(endereco.complemento) }}
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+  

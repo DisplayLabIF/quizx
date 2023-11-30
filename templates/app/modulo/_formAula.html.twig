@@ -1,0 +1,46 @@
+ <style>
+    .material{
+        display:inline-block;
+        margin-right:10px;
+    }
+    .remove-material{
+        height: 50px;
+        margin-left: 8px;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .padding-span span{
+        padding-left: 5px;
+    }
+ </style>
+
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.modulo) }}
+        </div>
+    </div>
+    </br>
+    <div id="nova-aula" style="display:none;">
+    
+        <div class="row">
+            <div class="col-sm">
+                {{ form_row(form.nome) }}
+            </div>
+            <div class="col-sm">
+                {{ form_row(form.tipo) }}
+            </div>
+        </div>
+        <div class="row">
+            <div id="col-aula-tipo-quiz" class="col-12">
+                {{ form_row(form.quiz) }}
+            </div>
+            
+        </div>
+        
+        
+        </br>
+        {{ form_row(form.salvar) }}
+    </div>
+{{ form_end(form) }}
+

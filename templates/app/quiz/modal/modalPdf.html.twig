@@ -1,0 +1,44 @@
+<div class="modal fade" tabindex="-1" data-backdrop="static" id="modalPreExportPdf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-file" aria-hidden="true"></i> Imprimir Quiz
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+
+            <form id="preFormExportPdf" method="GET" target="_blank" action="{{ path('quiz_export_pdf') }}">
+                <div class="modal-body">
+                    <input type="hidden" id="idQuiz" name="idQuiz">
+                    <div class="row">
+                        <div class="form-group fg-line col-md-12">
+                            <label for="cabecalhoPdf">Texto do cabeçalho da prova</label>
+                            <textarea class="form-control" rows="2" name="cabecalhoPdf" id="cabecalhoPdf" placeholder="Insira o texto que aparecerá no cabeçalho do prova"></textarea>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="qtdeRowsResp">Por favor, informe o número de linhas para as questões abertas serem respondidas: </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <div class="col-md-10">
+                                    <input type="number" id="qtdeRowsResp" name="qtdeRowsResp" class="form-control" placeholder="Número de linhas" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="exportPdf" class="btn btn-default">
+                       Imprimir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

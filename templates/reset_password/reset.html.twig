@@ -1,0 +1,16 @@
+{% extends 'site.html.twig' %}
+
+{% block title %}QuizClass 2.0 - Soluções educationais e comerciais para seu curso presencial ou híbrido {% endblock %}
+
+{% block body %}
+    {% include 'menus/site_home.html.twig' %}
+    <div class="container pt-5" style="min-height: 100vh;">
+
+        <h1>Redefinir senha</h1>
+
+        {{ form_start(resetForm) }}
+            {{ form_row(resetForm.plainPassword) }}
+            <button class="btn shadow-default btn-default">Redefinir senha</button>
+        {{ form_end(resetForm) }}
+    </div>
+{% endblock %}

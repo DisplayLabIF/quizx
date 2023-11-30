@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Éwerton Cardoso">
+    <meta name="theme-color" content="#FFE132">
+
+    <title>{% block title %}QuizX{% endblock %}</title>
+    {% block canonical %}{% endblock %}
+    <meta property="og:title" content="QuizX"/>
+    <meta name="twitter:title" content="QuizX">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('site') }}
+    {% endblock %}
+    <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="pt_BR"/>
+    <meta property="og:title" content="{% block ogtitle %}Quiz X{% endblock %}"/>
+    <meta property="og:description" content="Ferramentas para criação de quizzes e para práticas de metologias ativas."/>
+    <meta property="og:site_name" content="QuizX"/>
+    <meta property="og:url" content="{% block ogurl %}https://quizx.com.br{% endblock %}"/>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="QuizX">
+    <meta name="twitter:description" content="Ferramentas para criação de quizzes e para práticas de metologias ativas.">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+</head>
+<body>
+{% block body %}
+{% endblock %}
+{% include 'layout/site_footer.html.twig' %}
+{% block javascripts %}
+    
+    {{ encore_entry_script_tags('site') }}
+
+{% endblock %}
+</body>
+</html>

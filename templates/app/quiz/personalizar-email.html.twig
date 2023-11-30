@@ -1,0 +1,52 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <style>
+    </style>
+    <div class="pt-4 pb-5">
+        <a href="{{ path('app_opcoes_quiz', {'quiz_id': quiz_id}) }}"><i class="fas fa-chevron-left"></i> Voltar</a>
+        <h2 class="mt-4 mb-4">Personalizar e-mail</h2>
+        <p>Caso tenha configurado para enviar os resultados por e-mail, você pode customizar o e-mail enviado com as opções abaixo:</p>
+        <br>
+        {{ include('app/quiz/_formPersonalizacaoEmail.html.twig') }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        $('#imagem-logo-personalizacao-email').change(function() {
+            var file = $(this).prop('files')[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('quiz_id', '{{quiz_id}}');
+
+                $('#label-imagem-logo-personalizacao-email').html('').append(
+                    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando imagem...'
+                );
+                
+                $.ajax({
+                    type: "POST",
+                    url: '{{quizclass_api}}/upload-material/{{user_id}}',
+                    data: formData,
+                    processData: false,  
+                    contentType: false,  
+                }).done(function (data) { 
+                    $('#label-imagem-logo-personalizacao-email').html('').append(
+                        `<img src="${data.url}" style="max-height: 45px;"/>`
+                    );
+                    document.getElementById('personalizacao_email_logo').value=(data.url);
+                }).fail(function() {
+                    $('#label-imagem-logo-personalizacao-email').html('Erro! Tente novamente');
+                });
+            })
+    </script>
+{% endblock %}

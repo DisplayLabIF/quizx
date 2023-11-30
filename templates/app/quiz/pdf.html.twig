@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt_br">
+<head>
+    <meta charset="utf-8"/>
+    <title>Quiz Class - {{ cabecalhoPdf ? cabecalhoPdf|raw : ''}}</title>
+    <style>
+        .label-questao {
+            border-radius: 8px;
+            border: 1px solid black;
+            color: black;
+            padding: 2px;
+        }
+        .row-nomeData{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
+        .row-nota{
+            display: flex;
+            justify-content: flex-end;
+        }
+        .col-nome{
+            width: 80%;
+        }
+        .colt-data{
+            width: 20%;
+        }
+
+        p {
+            display: block;
+        }
+        .col-md-12 p:first-child {
+            display: inline;
+        }
+        body{
+            line-height: 1.8;
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="{{ asset('bundles/quizxsite/images/big-x.png') }}"/>
+</head>
+<body>
+    <div class="container">
+        <header class="col-md-12">
+            <div class="text-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-uppercase font-bold">{{ cabecalhoPdf ? cabecalhoPdf|raw : ''}}</p>
+                        <br>
+                        {#<span>{{ quiz.nivelEnsinoExtensive }} {{ quiz.nivel ? ' – ' ~ quiz.nivelExtensive : ''}}</span>#}
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <div class="row-nomeData">
+                <div class="col-nome">
+                    <span style="float: left">Nome:</span>
+                    <hr width="80%" style="float: left; border-color: black">
+                </div>
+                <div class="col-data">
+                    <span style="float: right">Data: <label style="color: black;">_____/_____/_____</label></span>
+                </div>
+            </div>
+            <div class="row-nota">
+                {% set valorProva = 0 %}
+                <p>
+                    Nota:______ <span id="valorProva"></span>
+                </p>
+            </div>
+        </header>
+        <br>
+        <br>
+        <div class="content text-md text-justify col-md-12">
+            {% if quiz and quiz.questoes | length > 0 %}
+                {% for key, questao in quiz.questoes %}
+                    {% if questao.valor %}
+                        {% set valorProva = valorProva + questao.valor %}
+                    {% endif %}
+                    <div style="margin-bottom: 5%;">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                    {{ "%02d" | format(key + 1) }} -
+                                    {% if questao.valor %}
+                                        {% if questao.valor > 1 %}
+                                            ({{ questao.valor | number_format(1,',','.')}} pts)
+                                        {% elseif questao.valor > 0 %}
+                                            ({{ questao.valor | number_format(1,',','.')}} pt)
+                                        {% endif %}
+                                    {% endif %}
+                                    {{ questao.pergunta | raw }}
+
+
+                            </div>
+                        </div>
+                        <br>
+                        {% if questao.opcoes | length > 0 %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% if questao.tipo == 'V_F' %}
+                                        {% for opcao in questao.opcoes %}
+                                            (&nbsp;&nbsp;&nbsp;) {{ opcao.texto }}
+                                            <br>
+                                        {% endfor %}
+                                    {% elseif questao.tipo == 'MULTIPLA_ESCOLHA' or questao.tipo == 'CAIXA_SELECAO' %}
+                                        {% for key, letra in 'a'..'h' %}
+                                            {% if key < questao.opcoes | length > 0 %}
+                                                {{ letra }}) {{ questao.opcoes[key].texto }}
+                                                <br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% elseif questao.tipo == 'ABERTA' %}
+                                        {% for index in 1..qtdeRowsResp%}
+                                            <hr width="100%" style="border-color: black; margin-bottom: 35px !important;">
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            {% for index in 1..qtdeRowsResp%}
+                                <hr width="100%" style="border-color: black; margin-bottom: 35px !important;">
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                false
+            {% endif %}
+        </div>
+        <script>
+            var element = document.getElementById("valorProva").innerHTML = "{{ valorProva ? '/ '~ valorProva | number_format(2,',','.') ~ ' pts.' : ''}}";
+        </script>
+    </div>
+</body>
+</html>

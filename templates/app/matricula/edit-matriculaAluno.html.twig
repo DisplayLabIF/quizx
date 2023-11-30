@@ -1,0 +1,111 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .observacao{
+            font-style: normal;
+            font-weight: normal;
+            font-size: 15px;
+            line-height: 18px;
+            color: #9F9C9C;
+        }
+        .observacao span{
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container pt-3 pb-5 pt-default"> 
+        <a href="{{ path('app_curso_gerenciar_alunos', {'turma_id': turma.id}) }}" title="Voltar"><i class="fas fa-chevron-left"></i> Voltar para gerenciamento dos alunos</a>
+        <h3>Editar matricula</h3>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-{{ label }} alert-dismissible fade show">
+                            {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% if turma.observacao is defined %}
+            <p class="observacao">
+                <span>Observações: </span>{{ turma.observacao }}
+            </P>        
+        {% endif %}     
+        
+        {{ include('app/matricula/_formMatricula.html.twig') }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        const masks = {
+            cpf(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                    .replace(/(-\d{2})\d+?$/, '$1')
+            },
+            phone(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{2})(\d)/, '($1) $2')
+                    .replace(/(\d{4})(\d)/, '$1-$2')
+                    .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+                    .replace(/(-\d{4})\d+?$/, '$1')
+            },
+            cep(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{5})(\d)/, '$1-$2')
+                    .replace(/(-\d{3})\d+?$/, '$1')
+            },
+        }
+
+        document.querySelectorAll('input').forEach(($input)=>{
+            const field = $input.dataset.js
+            
+            $input.addEventListener('input', (e)=>{
+                e.target.value = masks[field](e.target.value)
+            }, false)
+        })
+    </script>
+    <script>
+        function meu_callback(data) {   
+            if (data.logradouro != undefined && data.logradouro) {
+                document.getElementById('matricula_logradouro').value=(data.logradouro);
+            }
+            if (data.complemento != undefined && data.complemento) {
+                document.getElementById('matricula_complemento').value=(data.complemento);
+            }
+            if (data.bairro != undefined && data.bairro) {
+                document.getElementById('matricula_bairro').value=(data.bairro);
+            }
+            document.getElementById('matricula_cidade').value=(data.localidade);
+            document.getElementById('matricula_estado').value=(data.uf);
+        }
+        document.getElementById('matricula_cep').addEventListener('blur', (event) => {
+            var cep = event.target.value.replace(/\D/g, '');
+            if (cep != "") {
+                var validacep = /^[0-9]{8}$/;
+                if(validacep.test(cep)) {      
+                    var script = document.createElement('script'); 
+                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+                    document.body.appendChild(script);
+                }
+            }
+        })
+    </script>
+{% endblock %}

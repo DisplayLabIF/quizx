@@ -1,0 +1,32 @@
+{{ form_start(form) }}
+    <label for="imagem-logo-personalizacao-email">Sua logo ou imagem principal do e-mail</label>
+    <div class="mb-3"> 
+        <div style="display: none;">
+            {{ form_row(form.logo) }}
+            <input 
+                id="imagem-logo-personalizacao-email" 
+                type="file" 
+                style="display: none;"
+                accept= "image/*"
+            />
+        </div>
+        <label 
+            id="label-imagem-logo-personalizacao-email"
+            for="imagem-logo-personalizacao-email"
+            class="btn shadow-default btn-default btn-secondary d-flex align-items-center justify-content-center"
+            style="min-height: 50px; width: 200px;"
+        >   
+            {% if form.vars.value.logo %}
+                <img src="{{form.vars.value.logo}}" style="max-height: 45px;"/>
+            {% else %}
+                Adicionar imagem
+            {% endif %}
+            
+        </label>
+    </div>
+    {{ form_row(form.cor) }}
+    {{ form_row(form.texto) }}
+    {{ form_row(form.textoBotao) }}
+    {{ form_row(form.urlBase) }}
+
+{{ form_end(form) }}

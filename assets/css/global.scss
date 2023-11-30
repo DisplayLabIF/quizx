@@ -1,0 +1,438 @@
+@import "~bootstrap/scss/bootstrap";
+@import "colors";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+@media screen and (max-width: 1366px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  color: $darkPrimary;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+a {
+  color: $blueLink;
+}
+
+p {
+  line-height: 180%;
+}
+
+ul li {
+  list-style: none;
+}
+
+.navbar {
+  padding: 0.3rem 1rem;
+  .navbar-collapse {
+    margin-left: 20px;
+  }
+  .nav-link {
+    color: $darkPrimary !important;
+    font-weight: 500;
+    svg {
+      margin-right: 5px;
+    }
+  }
+  li {
+    padding: 0 10px;
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .navbar-toggler {
+    border: 1px solid $darkPrimary !important;
+  }
+
+  @media screen and (max-width: 1114px) {
+    .form-lead {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    .form-lead {
+      display: inline;
+    }
+  }
+}
+
+.btn {
+  font-family: "Roboto", sans-serif !important;
+  font-weight: 500;
+  font-size: inherit;
+  vertical-align: center;
+}
+
+.btn-dark {
+  color: white;
+  background-color: $darkPrimary;
+}
+.btn-default {
+  background-color: $primary;
+}
+
+.btn-danger {
+  background-color: $danger;
+}
+.btn-danger:hover {
+  background-color: rgb(253, 27, 27) !important;
+}
+
+.btn-sm {
+  height: 30px !important;
+}
+
+.btn-default:hover {
+  background-color: #eed127;
+}
+
+.btn-primary {
+  color: $darkPrimary;
+  background-color: $success;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: $blue;
+}
+
+.btn-secondary {
+  background-color: $primaryOpacity;
+  color: $darkPrimary;
+  border: none;
+}
+.btn-secondary:hover {
+  color: $white;
+  background-color: #6c757d;
+}
+
+.btn-white {
+  background-color: $white;
+  color: $darkPrimary;
+  border: none;
+  
+}
+
+.btn-white:hover {
+  background-color: $gray;
+}
+
+.btn-gray {
+  background-color: #DADADA;
+  color: $darkPrimary;
+  border: none;
+}
+
+.btn-success {
+  background-color: $success;
+  color: $darkPrimary;
+  min-height: 34px;
+  border: none;
+}
+.btn-success:hover {
+  color: $darkPrimary;
+  background: rgba(63, 201, 102, 0.7);
+}
+@media screen and (max-width: 420px) {
+  .btn-xs-block {
+    display: block;
+    width: 100%;
+  }
+}
+
+.border-radius-right {
+  border-radius: 0 4px 4px 0;
+}
+
+.border-radius-left {
+  border-radius: 4px 0 0 4px;
+}
+
+.border-radius {
+  border-radius: 4px;
+}
+label {
+  font-weight: lighter;
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 0.2rem;
+}
+.form-control {
+  .border-dark {
+    border: 1px solid $darkPrimary;
+  }
+}
+.border-dark {
+  border: 1px solid $darkPrimary;
+}
+.form-control:focus {
+  background: #ffffff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 1px solid $primary;
+  box-sizing: border-box;
+}
+
+.form-default {
+  height: 50px;
+  border: 1px solid $gray;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.shadow-default {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.shadow-default:hover {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+.form-select {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  vertical-align: middle;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  word-wrap: normal;
+}
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem !important;
+  color: $darkPrimary;
+}
+@media screen and (max-width: 420px) {
+  h1 {
+    font-size: 1.9rem !important;
+  }
+}
+.flex-row-default {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-center-default {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+span.badge-default {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  font-size: 0.93rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-primary {
+  background-color: $primary !important;
+}
+
+.bg-secondary {
+  background-color: $gray;
+}
+.bg-default {
+  background-color: $primary;
+}
+a.bg-default:hover {
+  background-color: #eed127;
+}
+.bg-success {
+  background-color: $success !important;
+}
+.bg-gray {
+  background-color: $gray;
+}
+.bg-gray-light {
+  background-color: $grayLight;
+}
+
+.site-footer {
+  background: $white;
+  min-height: 100px;
+  width: 100%;
+  // top: calc(50vh - 70px);
+  color: $white;
+  a {
+    color: $white;
+  }
+}
+.not-select {
+  -webkit-touch-callout: none; /* iPhone OS, Safari */
+  -webkit-user-select: none; /* Chrome, Safari 3 */
+  -khtml-user-select: none; /* Safari 2 */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  user-select: none;
+}
+
+.select2-container {
+  .select2-selection--single {
+    min-height: 50px !important;
+    border: 1px solid $gray;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+
+    .select2-selection__arrow,
+    .select2-selection__clear {
+      margin-top: 12px;
+    }
+    .select2-selection__rendered {
+      margin-top: 10px;
+    }
+  }
+  .select2-selection--multiple {
+    // height of input box
+    min-height: 50px !important;
+    border: 1px solid $gray;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    // each selected item in input box
+    .select2-selection__choice {
+      margin-top: 12px;
+    }
+  }
+}
+
+.select2-container.select2-container--focus .select2-selection {
+  border-color: $primary;
+  -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid $primary;
+  outline: 0;
+}
+
+.radio-checkbox-input {
+  /* COMMON RADIO AND CHECKBOX STYLES  */
+  input[type="radio"],
+  input[type="checkbox"] {
+    /* Hide original inputs */
+    visibility: hidden;
+    position: absolute;
+  }
+  input[type="radio"] + label:before {
+    height: 12px;
+    width: 12px;
+    margin-right: 10px;
+    content: " ";
+    display: inline-block;
+    vertical-align: baseline;
+    border: none;
+    background: #c4c4c4;
+  }
+
+  input[type="checkbox"] + label:before {
+    border: 1px solid #333;
+    content: "\00a0";
+    display: inline-block;
+    font: 16px/1em sans-serif;
+    height: 16px;
+    margin: 0 0.25em 0 0;
+    padding: 0;
+    vertical-align: baseline;
+    width: 16px;
+  }
+  input[type="checkbox"]:checked + label:before {
+    background: #fff;
+    color: #333;
+    content: "\2713";
+    text-align: center;
+  }
+  input[type="checkbox"]:checked + label {
+    font-weight: bold;
+  }
+
+  input[type="radio"] + label,
+  input[type="checkbox"] + label {
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  input[type="radio"]:checked + label {
+    font-weight: bold;
+  }
+
+  input[type="radio"]:checked + label:before {
+    background: $primary;
+  }
+  input[type="radio"] + label:before {
+    border-radius: 50%;
+  }
+
+  input[type="checkbox"] + label:before {
+    border-radius: 2px;
+  }
+}
+
+.card {
+  border: none;
+}
+
+.text-secondary {
+  color: $blueLink !important;
+}
+
+.text-default {
+  color: $primary !important;
+}
+
+@media (max-width: 1200px) {
+  table,
+  th,
+  td {
+    font-size: 0.95em;
+  }
+}
+@media (max-width: 425px) {
+  table,
+  th,
+  td {
+    font-size: 0.8em;
+  }
+}
+
+.root-quiz {
+  display: flex;
+  position: relative;
+  -webkit-font-smoothing: antialiased !important;
+  background: url("https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/background-quiz.png");
+  background-size: cover;
+  /* background-size: initial; */
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-position: center !important;
+  font-size: 15px;
+}

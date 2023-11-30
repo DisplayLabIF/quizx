@@ -1,0 +1,129 @@
+ <style>
+    .remove-dia-semana{
+        margin-bottom: 10px;
+    }
+    .horario{
+        display:inline-block;
+        margin-right:10px;
+    }
+    .delete-horario{
+        height: 50px;
+        margin-left: 8px;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .padding-span span{
+        padding-left: 5px;
+    }
+    .cursor-pointer{
+        cursor: pointer;
+    }
+ </style>
+{{ form_start(form) }}
+        <div class="row">
+            <div class="col-sm">
+                {{ form_row(form.nome) }}
+            </div>
+            <div class="col-sm">
+                {{ form_row(form.limiteAlunos) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.dataInicio) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.dataTermino) }}
+                {{ form_widget(form.dataTermino) }}            
+            </div>
+        </div>
+        <br/>
+        
+        <br/>
+        <div>
+        
+        <div class="row">
+            <div class="col-sm">
+                {{ form_row(form.observacao) }}
+            </div>
+            
+        </div>
+        <div id="turma-data-horario-aula" style="display:none;">
+            <label>Horarios das aulas ao vivo</label>
+            <div 
+                class="horarios"
+                data-prototype="
+                    {% apply escape %}
+                        {{ include('app/turma/collectionHorario.html.twig', { 'form': form.horarios.vars.prototype }) }}
+                    {% endapply %}"
+            >
+                {% for horario in form.horarios %}
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form_label(horario.dia) }}
+                        {{ form_widget(horario.dia) }}
+                    </div>
+
+                    <div class="col-md-4 col-sm-5">
+                        {{ form_label(horario.horaInicio) }}
+                        <div class="d-flex flex-row">
+                            {{ form_widget(horario.horaInicio.hour, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+                            {{ form_widget(horario.horaInicio.minute, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-5">
+                        {{ form_label(horario.horaTermino) }}
+                        <div class="d-flex flex-row">   
+                            {{ form_widget(horario.horaTermino.hour, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+                            {{ form_widget(horario.horaTermino.minute, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+                            <a href="#" id="deletaHorario"class="remove-dia-semana delete-horario btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="#" class="add_horaio_link btn btn-lg bg-default shadow-default mt-2 mb-2">Novo horario</a>
+            <br/>
+            {% if form.horarioDatas|length > 0 %}
+                <label>Datas das aulas ao vivo</label>
+                <div class="row" style="padding-left: 15px;">
+                    {% for horarioData in form.horarioDatas %}
+                        <div class="col-12 col-xl-3 col-lg-4 col-md border-dark border-radius mr-2 mb-2">
+                            {{ form_row(horarioData.aula) }}
+                            <div class="d-flex flex-row">
+                                {{ form_row(horarioData.dataAula) }}
+                                <a href="#" class="remove-data-aula delete-horario btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <br/>
+        {{ form_row(form.salvar) }}
+    {{ form_end(form) }}
+<!-- Modal -->
+<div class="modal fade" id="modalInfoFormaPagamento" tabindex="-1" role="dialog" aria-labelledby="modalInfoFormaPagamentoTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalInfoFormaPagamentoTitle">Tipos de pagamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <dl>
+            <dt>Recorrencia no cartão</dt>
+            <dd class="text-justify">O Pagamento Recorrente é uma opção de transação em que é feito o débito automatico no cartão de crédito do consumidor na data de vencimento de cada mês.</dd>
+           
+        </dl>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>

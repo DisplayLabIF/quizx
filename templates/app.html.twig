@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Quiz Class Team">
+    <meta name="theme-color" content="#FFE132">
+
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    <link rel="apple-touch-icon" href="{{ asset('build/images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('build/images/favicon.png') }}">
+</head>
+
+<body>
+    {% include 'menus/app.html.twig' %}
+
+    <div id="root" class="container pt-5">
+        {% block body %}{% endblock %}
+    </div>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+    
+</body>
+
+</html>

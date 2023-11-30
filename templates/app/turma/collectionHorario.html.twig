@@ -1,0 +1,21 @@
+    <div class="col-md-4">
+        {{ form_label(form.dia) }}
+        {{ form_widget(form.dia) }}
+    </div>
+
+    <div class="col-md-4 col-sm-5">
+        {{ form_label(form.horaInicio) }}
+        <div class="d-flex flex-row">
+            {{ form_widget(form.horaInicio.hour, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+            {{ form_widget(form.horaInicio.minute, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-5">
+        {{ form_label(form.horaTermino) }}
+        <div class="d-flex flex-row">   
+            {{ form_widget(form.horaTermino.hour, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+            {{ form_widget(form.horaTermino.minute, {'attr': {'class': 'form-default', 'style':'min-width:100px;'}}) }}
+            <a href="#" id="deletaHorario"class="remove-dia-semana delete-horario btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+        </div>
+    </div>

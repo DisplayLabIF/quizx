@@ -1,0 +1,119 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Corrigir resposta {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .form-check{
+            padding-left: 0;
+            padding-right: 10px;
+        }
+        .cursor-not-allowed{
+            cursor: not-allowed
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+
+    <div class="pt-4">
+        {{ form_start(form) }}
+            <a href="{{ path('app_corrigir_respostas_quiz', {'quiz_id': quiz_id}) }}"><i class="fas fa-chevron-left"></i> Voltar para respostas</a>
+            <h1 class="mt-3">Corrigir resposta {{form.vars.value.quizAtual.nome}}</h1>
+            <p class="font-weight-bold m-0"> Aluno/Lead:
+                {% if form.vars.value.leadQuizEntity %}
+                    {% if form.vars.value.leadQuizEntity.nome %}
+                        <span class="font-weight-normal">{{ form.vars.value.leadQuizEntity.nome }}</span>
+                    {% else %}
+                        <span class="font-weight-normal">Nome não informado</span>
+                    {% endif %}
+                {% elseif form.vars.value.alunoEntity %}
+                    <span class="font-weight-normal">{{ form.vars.value.alunoEntity.nome }}</span>
+                {% else %}
+                    <span class="font-weight-normal">Nome não informado</span>
+                {% endif %}
+            </p>
+            <p class="pb-5 font-weight-bold"> E-mail:
+                {% if form.vars.value.leadQuizEntity %}
+                    {% if form.vars.value.leadQuizEntity.email %}
+                        <span class="font-weight-normal">{{ form.vars.value.leadQuizEntity.email }}</span>
+                    {% else %}
+                        <span class="font-weight-normal">E-mail não informado</span>
+                    {% endif %}
+                {% elseif form.vars.value.alunoEntity %}
+                    <span class="font-weight-normal">{{ form.vars.value.alunoEntity.email }}</span>
+                {% else %}
+                    <span class="font-weight-normal">E-mail não informado</span>
+                {% endif %}
+            </p>
+            <div class="pb-5"> 
+                {% for respostaQuestao in form.respostas|sort((a, b) => a.vars.value.questao.numeroQuestao <=> b.vars.value.questao.numeroQuestao) %}
+                    <h5>Questão {{respostaQuestao.vars.value.questao.numeroQuestao}}</h5>
+                    <div class="row">
+                        <div class="col-3">
+                            {% if respostaQuestao.vars.value.questao.tipo == 'RESPOSTA_VOZ' %}
+                                <span class="font-weight-bold">Reconhecimento de voz</span>
+                            {% elseif respostaQuestao.vars.value.questao.tipo == 'MULTIPLA_ESCOLHA' %}
+                                <span class="font-weight-bold">Multipla escolha</span>
+                            {% elseif respostaQuestao.vars.value.questao.tipo == 'V_F' %}
+                                <span class="font-weight-bold">Verdadeiro ou falso</span>
+                            {% elseif respostaQuestao.vars.value.questao.tipo == 'ORDENAR' %}
+                                <span class="font-weight-bold">Ordenar</span>
+                            {% elseif respostaQuestao.vars.value.questao.tipo == 'ABERTA' %}
+                                <span class="font-weight-bold">Aberta</span>
+                                {% for key,value in respostaQuestao.vars.value.resposta %}
+                                    {% if key == 'ABERTA' %}
+                                        <p class="font-weight-bold">Resposta: <span class="font-weight-normal">{{value}}</span></P>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </div>
+                        {% if respostaQuestao.vars.value.questao.tipo == 'ABERTA' %}
+                            <div class="col-3 form-group">
+                                {{ form_label(respostaQuestao.nota) }} ({{respostaQuestao.vars.value.questao.valor}}pts)
+                                {{ form_widget(respostaQuestao.nota) }}
+                            </div>
+                            <div class="col-3">
+                                {{ form_row(respostaQuestao.observacao) }}
+                            </div>
+                            <div class="col-3 form-group">
+                                <label>Correção</label>
+                                {{ form_row(respostaQuestao.correto) }}
+                            </div>
+                        {% else %}
+                            <div class="col-3 form-group">
+                                {{ form_label(respostaQuestao.nota) }} ({{respostaQuestao.vars.value.questao.valor}}pts)
+                                {{ form_widget(respostaQuestao.nota, { 'disabled':'disabled', 'attr':{'class': 'form-default cursor-not-allowed'} }) }}
+                            </div>
+                            <div class="col-3">
+                                {{ form_row(respostaQuestao.observacao, { 'disabled':'disabled', 'attr':{'class': 'form-default cursor-not-allowed'} }) }}
+                            </div>
+                            <div class="col-3 form-group">
+                                <label>Correção</label>
+                                {{ form_row(respostaQuestao.correto, { 'disabled':'disabled', 'row_attr':{'style': 'display: none !important;'} }) }}
+                                {% if respostaQuestao.vars.value.correto == true %}
+                                    <p>Certo</p>
+                                {% else %}
+                                    <p>Errado</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p>Nenhuma das questões foram respondidas!</p>
+
+                {% endfor %}
+                {{ form_row(form.salvar) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('daterangepicker') }}
+{% endblock %}

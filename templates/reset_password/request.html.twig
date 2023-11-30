@@ -1,0 +1,23 @@
+{% extends 'site.html.twig' %}
+
+{% block title %}QuizClass 2.0 - Soluções educationais e comerciais para seu curso presencial ou híbrido {% endblock %}
+
+{% block body %}
+    {% include 'menus/site_home.html.twig' %}
+    <div class="container pt-5" style="min-height: 100vh;">
+        {% for flashError in app.flashes('reset_password_error') %}
+            <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+        {% endfor %}
+        <h1>Redefinir senha</h1>
+        {{ form_start(requestForm) }}
+            {{ form_row(requestForm.email) }}
+            <div>
+                <small>
+                    Digite seu endereço de e-mail e lhe enviaremos um email com um link para redefinir sua senha.
+                </small>
+            </div>
+
+            <button class="btn shadow-default btn-default">Enviar email para redefinir senha</button>
+        {{ form_end(requestForm) }}
+    </div>
+{% endblock %}

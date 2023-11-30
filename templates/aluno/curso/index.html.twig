@@ -1,0 +1,19 @@
+{% extends 'aluno.html.twig' %}
+    
+{% block title %}QuizX - Cursos {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <div class="container pt-4">
+        {{ include('aluno/curso/list-cursos.html.twig', {'matriculas': matriculas}) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meus dados {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+</style>
+    <div class="container pt-4">  
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-{{ label }} alert-dismissible fade show">
+                            {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}    
+
+        {{ include('app/minhaConta/nav.html.twig',{page: 'meus_dados'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form, {'attr': {'id': 'form_meus_dados'}}) }}
+                <div class="row">
+                    <div class="col-12">{{form_row(form.nome)}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{form_row(form.cpf)}}</div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{form_row(form.contato.celular)}}</div>
+                </div>
+                <br>
+                <label>Endereços</label>
+                <div 
+                    id="meusDados-enderecos-accordion"
+                    class="meusDados-enderecos"
+                    data-prototype="
+                        {% apply escape %}
+                            {{ include('app/minhaConta/collectionEnderecos.html.twig', { 'endereco': form.enderecos.vars.prototype, 'index': form.enderecos.vars.prototype.vars.name }) }}
+                        {% endapply %}"
+                >
+                    {% for endereco in form.enderecos %}
+                        <div class="card border-radius shadow-default">
+                                <label id="endereco-{{endereco.vars.name}}" class="card-header btn btn-block d-flex justify-content-between" style="height: 100%;"data-toggle="collapse" data-target="#endereco-collapse-{{endereco.vars.name}}" aria-expanded="true" aria-controls="endereco-collapse-{{endereco.vars.name}}">
+                                    <span class="text-left">{{endereco.vars.data.logradouro}} {{endereco.vars.data.numero}}<br>{{endereco.vars.data.bairro}}</span>
+                                    <a href="#" id="deletaEndereco" class="remove-endereco btn shadow-default btn-danger ml-2" style="height: 38px;"><i class="fas fa-trash"></i></a>
+                                </label>
+
+                            <div id="endereco-collapse-{{endereco.vars.name}}" class="collapse" aria-labelledby="endereco-{{endereco.vars.name}}" data-parent="#meusDados-enderecos-accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.cep) }}
+                                        </div>
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.cidade) }}
+                                        </div>
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.estado) }}
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.logradouro) }}
+                                        </div>            
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.bairro) }}
+                                        </div>
+                                        <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                            {{ form_row(endereco.numero) }}
+                                        </div>
+                                        <div class="col-12 ">
+                                            {{ form_row(endereco.complemento) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br>
+                <a href="#" class="add_endereco_link"><i class="fas fa-plus"></i> Novo endereço</a>
+                <br>
+                <br>
+                {{ form_row(form.salvar)}}
+            {{ form_end(form) }}
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        
+
+        jQuery(document).ready(function() {
+            $('.remove-endereco').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+                return false;
+            });
+            var $collectionHolder = $('div.meusDados-enderecos');
+
+            $collectionHolder.data('index', $collectionHolder.children().length);
+            
+            $('.add_endereco_link').on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder);
+            });
+                
+                
+        });
+
+        function addTagForm($collectionHolder) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index + 1);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<div class=""></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+            addMask()
+            $('.remove-endereco').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+                return false;
+            });
+        }
+
+        $('#meus_dados_salvar').on('click', function() {
+            if(!$("#form_meus_dados")[0].checkValidity()){
+                $('#meusDados-enderecos-accordion .collapse').toggleClass('show');
+            }
+        });
+
+
+        const masks = {
+            cpf(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                    .replace(/(-\d{2})\d+?$/, '$1')
+            },
+            phone(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{2})(\d)/, '($1) $2')
+                    .replace(/(\d{4})(\d)/, '$1-$2')
+                    .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+                    .replace(/(-\d{4})\d+?$/, '$1')
+            },
+            cep(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{5})(\d)/, '$1-$2')
+                    .replace(/(-\d{3})\d+?$/, '$1')
+            },
+        }
+        const addMask = () => {
+            document.querySelectorAll('input').forEach(($input)=>{
+                const field = $input.dataset.js
+                if(field)
+                    $input.addEventListener('input', (e)=>{
+                        e.target.value = masks[field](e.target.value)
+                    }, false)
+            })
+        }
+
+    addMask();
+    </script>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <style>
+        .radio-button-row{
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .form-check-label{
+            margin-right: 10px;
+        }
+        .quais-dados-obter{
+            margin-right: 25px;
+            font-weight: normal;
+        }
+        .imagem{
+            width: 50px;
+            height: 56px;
+        }
+        .ul-li-style{
+            list-style: disc;
+            font-size: 15px;
+            line-height: 18px;
+        }
+        .btn-voltar-edicao{}
+        .remove-material{
+            height: 50px;
+            margin-left: 8px;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+    </style>
+    <div class="pt-4 pb-5">
+        <a href="{{ path('app_editar_quiz', {'quiz_id': quiz_id}) }}" class="btn-voltar-edicao"><i class="fas fa-chevron-left"></i> Voltar para edição das questões</a>
+        <div class="mt-2 mb-4 d-flex align-items-center mr-0">
+            <img src="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/like-finalizacao-quiz.png" class="imagem mr-4"/>
+            <div>
+                <h1>Legal! Você está quase finalizando.</h1>
+                <p class="m-0">Agora que você já criou suas questões, vamos escolher algumas configurações.</p>
+            </div>
+        </div>
+        {{ include('app/quiz/_formConfiguracaoQuiz.html.twig') }}
+        {# <a href="{{ path('app_visualizar_quiz', {'quiz_id': quiz_id}) }}" class="btn btn-lg btn-dark shadow-default">Visualizar quiz</a><br> #}
+        <label class="mt-3">Ao finalizar, na próxima página você poderá:</label>
+        <ul class="ml-4 ul-li-style">
+            <li class="ul-li-style">Ter uma pré-visualização geral do seu Quiz;</li>
+            <li class="ul-li-style">Aprender como disponibilizar o seu Quiz para começar a receber respostas;</li>
+            <li class="ul-li-style">Compartilhar;</li>
+            <li class="ul-li-style">Imprimir;</li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('sortable') }}
+    {{ encore_entry_script_tags('camposConfiguracaoQuiz-dragAndDrop') }}
+    <script>
+        localStorage.removeItem('@QuizClassSessionId');
+        localStorage.setItem('@QuizClassClientId', '{{user_id}}');
+    </script>
+    <script>
+        if(document.getElementById('configuracao_quiz_obterDadosRespondente_0').checked){
+            document.getElementById('info-solicitar-dados').style.display = 'block';
+        }else{
+            document.getElementById('info-solicitar-dados').style.display = 'none';
+        }
+
+        if(document.getElementById('nota-minima-quiz-configuracao')){
+            if(document.getElementById('configuracao_quiz_definirNotaMinima_0').checked){
+                document.getElementById('nota-minima-quiz-configuracao').style.display = 'block';
+            }else{
+                document.getElementById('nota-minima-quiz-configuracao').style.display = 'none';
+            }
+        }
+
+        if(document.getElementById('configuracao_quiz_definirTempoResposta_0').checked){
+            document.getElementById('tempo-maximo-quiz-configuracao').style.display = 'block';
+        }else{
+            document.getElementById('tempo-maximo-quiz-configuracao').style.display = 'none';
+        }
+    
+
+        if(document.getElementById('configuracao_quiz_adicionarMateriais_0').checked){
+            document.getElementById('div-materiais-configuracao-quiz').style.display = 'block';
+        }
+
+        document.getElementById('configuracao_quiz_definirTempoResposta_0').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('tempo-maximo-quiz-configuracao').style.display = 'block';
+            }
+        })
+        document.getElementById('configuracao_quiz_definirTempoResposta_1').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('tempo-maximo-quiz-configuracao').style.display = 'none';
+            }
+        })
+
+    
+        document.getElementById('configuracao_quiz_obterDadosRespondente_0').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('info-solicitar-dados').style.display = 'block';
+            }
+        })
+        document.getElementById('configuracao_quiz_obterDadosRespondente_1').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('info-solicitar-dados').style.display = 'none';
+            }
+        })
+        if(document.getElementById('nota-minima-quiz-configuracao')){
+            document.getElementById('configuracao_quiz_definirNotaMinima_0').addEventListener('change', (event) => {
+                if (event.currentTarget.checked) {
+                    document.getElementById('nota-minima-quiz-configuracao').style.display = 'block';
+                }
+            })
+            document.getElementById('configuracao_quiz_definirNotaMinima_1').addEventListener('change', (event) => {
+                if (event.currentTarget.checked) {
+                    document.getElementById('nota-minima-quiz-configuracao').style.display = 'none';
+                }
+            })
+        }
+
+        document.getElementById('configuracao_quiz_adicionarMateriais_0').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('div-materiais-configuracao-quiz').style.display = 'block';
+            }
+        })
+        document.getElementById('configuracao_quiz_adicionarMateriais_1').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('div-materiais-configuracao-quiz').style.display = 'none';
+            }
+        })
+        
+    </script>
+    <script>
+        jQuery(document).ready(function() {
+            $('.remove-material').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().parent().remove();
+                return false;
+            });
+            var $collectionHolder = $('div.materiais');
+
+            $collectionHolder.data('index', $collectionHolder.children().length);
+            
+            $('.add_material_link').on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder);
+            });
+                
+                
+        });
+
+        function addTagForm($collectionHolder) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<div class="row"></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+
+            var tipoArquivo = document.getElementById("configuracao_quiz_materiais_"+index+"_tipo").value;
+
+            $('#file-upload').attr({
+                'id': 'file-upload-'+(index),
+                'accept': (tipoArquivo!=='document') && tipoArquivo+'/*',
+            });
+
+            $('#label-carregar-material').attr({
+                'for': 'file-upload-'+(index),
+                'id': 'label-carregar-material-'+(index)
+            });
+            $('.remove-material').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().parent().remove();
+                return false;
+            });
+        }
+    </script>
+    <script>
+        $('#materiais-configuracao-quiz').on('change', '.tipo_arquivo', function() {
+            var indexElement = $(this).attr('id').split('_')[3];
+            var tipoArquivo = $(this).val();
+            $('#file-upload-'+indexElement).attr(
+                'accept', (tipoArquivo!=='document') ? tipoArquivo+'/*' : '',
+            );
+            
+        });
+        $('#materiais-configuracao-quiz').on('change', '.file-upload', function() {
+            var indexElement = $(this).attr('id').split('-')[2];
+            var file = $(this).prop('files')[0];
+            if($("#configuracao_quiz_materiais_"+indexElement+"_tipo").val()==='video'){
+                var upload= {
+                    upload:{
+                        approach: 'tus',
+                        size: file.size
+                    },
+                    name: $("#configuracao_quiz_materiais_"+indexElement+"_nome").val(), 
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: 'https://api.vimeo.com/me/videos',
+                    headers: {
+                        'Authorization':'Bearer {{ access_token_vimeo }}',
+                        'Content-Type':'application/json',
+                        'Accept': 'application/vnd.vimeo.*+json;version=3.4'
+                    },
+                    data: JSON.stringify(upload),
+                }).done(function (data) { 
+                    var uploadEndPoint = data.upload.upload_link;
+
+                    const uploader = new tus.Upload(file, {
+                        uploadUrl: uploadEndPoint,
+                        retryDelays: [0, 1000, 3000, 5000],
+                        uploadSize: file.size,
+                        onError: function(error) {
+                            console.log("Failed because: " + error);
+                            $('#label-carregar-material-'+indexElement).html('Erro! Tente novamente');
+                            document.getElementById('configuracao_quiz_materiais_'+indexElement+'_file').value=null;
+                        },
+                        onProgress: function(bytesUploaded, bytesTotal) {
+                            var percentComplete = ((bytesUploaded / bytesTotal) * 100);
+                            
+                            $('#label-carregar-material-'+indexElement).html(percentComplete.toFixed(2) + '%');
+                        },
+                        onSuccess: function() {
+                            $('#label-carregar-material-'+indexElement).html('Material carregado!');
+                            document.getElementById('configuracao_quiz_materiais_'+indexElement+'_file').value=(data.link);
+                        }
+                    })
+                    uploader.start();
+                }).fail(function() {
+                    $('#label-carregar-material-'+indexElement).html('Erro! Tente novamente');
+                    document.getElementById('configuracao_quiz_materiais_'+indexElement+'_file').value=null;
+                });
+            }else{
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('quiz_id', '{{quiz_id}}');
+
+                $('#label-carregar-material-'+indexElement).html('').append(
+                    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando arquivo...'
+                );
+                $.ajax({
+                    type: "POST",
+                    url: '/upload-material/{{user_id}}',
+                    data: formData,
+                    processData: false,  
+                    contentType: false,  
+                }).done(function (data) { 
+                    $('#label-carregar-material-'+indexElement).html('Material carregado!');
+                    document.getElementById('configuracao_quiz_materiais_'+indexElement+'_file').value=(data.url);
+                }).fail(function() {
+                    $('#label-carregar-material-'+indexElement).html('Erro! Tente novamente');
+                    document.getElementById('configuracao_quiz_materiais_'+indexElement+'_file').value=null;
+                });
+
+            }
+        });
+    </script>
+{% endblock %}

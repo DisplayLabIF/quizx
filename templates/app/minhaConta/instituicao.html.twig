@@ -1,0 +1,154 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+    hr{
+        margin: 0;
+        font-weight
+    }
+    .iformacao{
+        font-family: Rubik;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 18px;
+        color: #9F9C9C;
+    }
+</style>
+    <div class="container pt-4">
+        {% for message in app.flashes('notice') %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endfor %}
+        
+        {{ include('app/minhaConta/nav.html.twig',{page: 'instituicao'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        {{ form_row(form.nome) }}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        {{ form_label(form.url) }}
+                        <span class="btn pb-0 pt-0" data-toggle="tooltip" data-placement="top" title="A sua Url será gerada com base no nome da sua instituição." >
+                            <i class="fas fa-info-circle "></i>
+                        </span>
+                        {{ form_widget(form.url) }}
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        {{ form_row(form.cnpj) }}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        {{ form_row(form.email) }}
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        {{ form_row(form.cursosDisponiveisVenda) }}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        <label>Logo instituição</label>
+                        <div> 
+                            <div style="display: none;">
+                                {{ form_row(form.imagem) }}
+                                <input 
+                                    id="imagem-instituicao" 
+                                    type="file" 
+                                    style="display: none;"
+                                    accept= "image/*"
+                                />
+                            </div>
+                            <label 
+                                id="label-carregar-imagem-instituicao"
+                                for="imagem-instituicao"
+                                class="btn shadow-default btn-default btn-secondary btn-block flex-center-default"
+                                style="min-height: 50px;"
+                            >
+                                Adicionar imagem
+                            </label>
+                        </div>
+                    </div>
+                </div>                   
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.descricao) }}
+                    </div>
+                </div>  
+                {{ form_row(form.salvar) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        jQuery(document).ready(function() {
+            $('.js-select2').select2({
+                width: '100%'
+            });
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+            
+    </script>
+    <script>
+        let imagem = document.getElementById('instituicao_imagem').value;
+        
+        if(imagem && imagem !== undefined && imagem !==''){
+            $('#label-carregar-imagem-instituicao').html('').append(
+                `<img src="${imagem}" style="max-height: 45px;"/>`
+            )
+        }
+    </script>
+    <script>
+        $('#imagem-instituicao').change(function() {
+            var file = $(this).prop('files')[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('user_id', '{{user_id}}');
+
+            $('#label-carregar-imagem-instituicao').html('').append(
+                '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando imagem...'
+            );
+            $.ajax({
+                type: "POST",
+                url: '{{quizclass_api}}/upload/outros',
+                data: formData,
+                processData: false,  
+                contentType: false,  
+            }).done(function (data) { 
+                $('#label-carregar-imagem-instituicao').html('').append(
+                    `<img src="${data.url}" style="max-height: 45px;"/>`
+                );
+                document.getElementById('instituicao_imagem').value=(data.url);
+            }).fail(function() {
+                $('#label-carregar-imagem-instituicao').html('Erro! Tente novamente');
+            });
+        })
+    </script>
+    <script>
+    
+        const toUrl = (value) => {
+            return value == undefined ? '' : value.normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/[^a-z0-9_]+/gi, '-').toLowerCase();
+        }
+        document.getElementById('instituicao_nome').oninput = e => {
+            document.getElementById('instituicao_url').value = "{{ app.request.server.get('DOMINIO_PAGINA_CURSOS') }}/" + toUrl(e.target.value);
+        };
+        
+    </script>
+{% endblock %}

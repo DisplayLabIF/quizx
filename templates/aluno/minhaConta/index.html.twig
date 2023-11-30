@@ -1,0 +1,57 @@
+{% extends 'aluno.html.twig' %}
+    
+ {% block title %}QuizX - Meus dados {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+</style>
+    <div class="container pt-4">  
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-{{ label }} alert-dismissible fade show">
+                            {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}    
+        {{ include('aluno/minhaConta/nav.html.twig',{page: 'dados_acesso'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.nome) }}
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6">
+                        {{ form_row(form.password.first) }}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            {{ form_label(form.password.second) }}
+                            <div class="form-error">
+                                {{ form_errors(form.password.first) }}
+                            </div>
+                            {{ form_widget(form.password.second) }}
+                        </div>
+                    </div>
+                </div> 
+                {{ form_row(form.alterarDados) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

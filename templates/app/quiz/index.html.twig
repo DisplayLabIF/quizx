@@ -1,0 +1,205 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizX - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        th{
+            border: none;
+        }
+        .quiz-assuntos-nivel{
+            font-size: 13px;
+            line-height: 15px;
+            color: #9F9C9C;
+        }
+        @media screen and (max-width: 500px) {
+            .dropdown-menu.show {
+                top: 120px !important;
+            }
+        }
+    </style>
+{% endblock %}
+    
+ {% block body %}
+     <div class="pt-4">
+         <div class="container">
+         <div class="row">
+             <div class="mr-auto">
+                 <h1 class="flex-row-default"><span class="badge-default bg-default mr-3">{{ "%02d"|format(pagination.getTotalItemCount) }}</span> Quizzes</h1>
+             </div>
+             <div>
+                 <a href="{{ path('app_criar_quiz') }}" class="btn btn-lg btn-dark shadow-default"><i class="fas fa-plus"></i> Criar Quiz</a>
+             </div>
+         </div>
+         </div>
+         <table class="table table-striped table-borderless table-responsive-sm">
+            <thead>
+                <tr>
+                    {#<th scope="col">Código</th>#}
+                    <th scope="col">Quiz</th>
+                    {% if  app.user and app.user.tipo == 'ADM_QUIZ'%}
+                        <th scope="col">Usuário</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for quiz in pagination %}
+                    <tr>
+
+                        {#<th scope="row">{{ quiz.quiz.codigo }}</th>#}
+                        <td>
+                            {% if quiz.quiz.image %}
+                                <img src="{{quiz.quiz.image}}" style="max-height: 68px; max-width: 68px;"/>
+                            {% endif %} {{ quiz.quiz.nome }} ({{ quiz.quiz.questoes|length }} questões)
+                           {% if quiz.qtd_respostas > 0 %}
+                                <span class='ml-2'> |  {{ quiz.qtd_respostas }} resposta{% if quiz.qtd_respostas > 1 %}s{% endif%} finalizada{% if quiz.qtd_respostas > 1 %}s{% endif%}</span>
+                           {% endif %}
+                           <br>
+                           {% if quiz.quiz.nivel and quiz.quiz.nivel != 'NONE' %}
+                                <span class="quiz-assuntos-nivel">
+                                    {{quiz.quiz.nivelFormat}}.
+                                </span>
+                           {% endif %}
+                           {% if quiz.quiz.assuntos %}
+                                <span class="quiz-assuntos-nivel">{{ quiz.quiz.assuntos|join(', ') }}.</span>
+                            {% endif %}
+                        </td>
+                        {% if  app.user and app.user.tipo == 'ADM_QUIZ'%}
+                            <td>
+                                {% if quiz.quiz.createdBy %}
+                                    <strong>Nome</strong>: {{quiz.quiz.createdBy.nome}}<br>
+                                    <strong>E-mail</strong>: {{quiz.quiz.createdBy.email}}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+
+                        <td class="d-flex justify-content-end flex-row flex-wrap" style="align: right;">
+                            <div class="btn-group dropleft" style="position: static;">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                    Opções
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="{{ path('app_editar_quiz', {'quiz_id': quiz.quiz.id}) }}"><i class="fas fa-pen"></i> Alterar</a>
+                                    <a class="dropdown-item" href="{{ path('app_quiz_finalizar', {'quiz_id': quiz.quiz.id}) }}"><i class="fas fa-cog"></i> Configurações de funcionamento <br>deste Quiz</a>
+                                    <a class="dropdown-item" target="_blank" href="{{ path('app_responder_quiz', {'codigo': quiz.quiz.codigo}) }}" ><i class="far fa-eye"></i> Visualizar</a>
+                                    <a class="dropdown-item" href="{{ path('app_resultados_quiz', {'quiz_id': quiz.quiz.id}) }}" ><i class="fas fa-check-double"></i> Relatório de respostas</a>
+                                    {% if quiz.quiz.configuracaoQuiz != null and  quiz.quiz.configuracaoQuiz.mostrarNota == 'CONFERENCIA' %}
+                                        <a class="dropdown-item" href="{{ path('app_corrigir_respostas_quiz', {'quiz_id': quiz.quiz.id}) }}"><i class="fas fa-check"></i> Corrigir respostas</a>
+                                    {% endif %}
+                                
+                                    <a class="dropdown-item btn-imprimir-quiz" value="{{quiz.quiz.id}}" title="Imprimir quiz">
+                                        <i class="fas fa-print" value={{quiz.quiz.id}}></i> Gerar PDF para impressão
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                        <span data-toggle="modal" data-target="#modalDelete{{quiz.quiz.id}}">
+                                            <a class="dropdown-item" title="Deletar">
+                                                <i class="fas fa-times"></i> Deletar Quiz
+                                            </a>
+                                        </span>
+                                    </div>
+                            </div>
+
+                            {{ include('app/quiz/modal/deleteQuiz.html.twig')}}
+                        </td>
+                    </tr>
+                    {{ include('app/quiz/modal/enviarQuizEmail.html.twig')}}         
+                {% else %}
+                    <tr>
+                        <td colspan="6">Nenhum quiz encontrado</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation pb-5">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+     </div>
+     {{ include('app/quiz/modal/modalPdf.html.twig') }}
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        localStorage.setItem('@QuizClassClientId', '{{user_id}}');
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        document.querySelectorAll('a.btn-imprimir-quiz').forEach(($button)=>{
+           $button.addEventListener('click', (event) => {
+                let quizId = $button.value;
+
+                $("#idQuiz").val(quizId);
+                $('#modalPreExportPdf').modal('show');
+            })
+        })
+
+        $(document).on('submit', '#preFormExportPdf', function (e) {
+            $('#modalPreExportPdf').modal('hide');
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            enviarEmail();
+        });
+
+
+        $(".emails").select2({
+            placeholder: "E-mail(s)",
+            allowClear: true,
+            templateResult: function (option) {
+                return option.text;
+            },
+
+            templateSelection: function (option) {
+                return option.text;
+            },
+            tags: true,
+            multiple: true,
+            tokenSeparators: [';'],
+        });
+
+        function enviarEmail() {
+            document.querySelectorAll('button.btn_enviar_emails').forEach(($button)=>{
+                $button.addEventListener('click', (event) => {
+                    let quizId = $button.value;
+                    let emails = $('#emails-'+quizId).val();
+
+                    if (emails && emails.length > 0) {
+                        $('#box-enviando-'+quizId).html('Enviando...');
+                        $('#box-enviando-'+quizId).show('fast');
+
+                        $.ajax({
+                            method: 'POST',
+                            data:
+                                {
+                                    'emails': emails,
+                                },
+                            url: ``,
+                            success: function success(data) {
+                                $('#box-enviando-'+quizId).html('Os e-mails foram enviados.');
+
+                                setTimeout(function() {
+                                    $('#box-enviando-'+quizId).hide('slow');
+                                }, 3000);                            
+                            },
+                            error: function error(data) {
+                                    $('#box-enviando-'+quizId).html('Erro ao enviar os e-mails.');
+
+                                setTimeout(function() {
+                                    $('#box-enviando-'+quizId).hide('slow');
+                                }, 3000);
+                            }
+
+                        });
+                    } else {
+                        alert('Informe um e-mail para o envio');
+                    }
+                })
+            })
+        };
+    </script>
+{% endblock %}

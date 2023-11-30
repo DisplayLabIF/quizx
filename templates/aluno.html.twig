@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Quiz Class Team">
+    <meta name="theme-color" content="#FFE132">
+
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    <link rel="apple-touch-icon" href="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/Favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/Favicon.png">
+</head>
+<body>
+{% include 'menus/aluno.html.twig' %}
+<div id="root" class="pt-5">
+{% block body %}{% endblock %}
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
+</html>

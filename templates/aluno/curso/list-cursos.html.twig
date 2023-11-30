@@ -1,0 +1,46 @@
+<style>
+    .div-list-curso{
+        width: 270px; 
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+    }
+    .div-img-curso{
+        width:100%;
+        height:145px;
+    }
+    .img-curso{
+        width:100%;
+        height:100%;
+    }
+    .info-cursos{
+        font-size: 13px;
+        line-height: 15px;
+    }
+</style>
+<div class="row justify-content-center justify-content-xl-between justify-content-sm-between justify-content-md-between justify-content-lg-between">
+    <div class="mr-3">
+        <h1 class="flex-row-default"><span class="badge-default bg-default mr-3">{{ "%02d"|format(matriculas|length) }}</span> Meus Cursos</h1>
+    </div>
+</div>
+<div class="row justify-content-center justify-content-xl-start justify-content-sm-center justify-content-md-start justify-content-lg-start">
+    {% for matricula in matriculas %}
+        <div class="div-list-curso card m-2 mr-3">
+            
+            <div class="card-body p-0">
+                <h5 class="card-title mt-2">{{matricula.turma.curso.nome}}</h5>
+                <div class="info-cursos mb-2">
+                    <div class="row">
+                        <div class="col-12">
+                            {% set qtd_aulas = 0 %}
+                            {% for modulo in matricula.turma.curso.modulos %}
+                                {% set qtd_aulas = qtd_aulas + modulo.aulas|length %}
+                            {% endfor %}
+                            <p class="card-text"><i class="fas fa-graduation-cap"></i> {{qtd_aulas}} aulas disponíveis</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ path('aluno_curso_show', {'matricula_id': matricula.id}) }}" class="btn btn-default flex-center-default btn-block mt-4">Acessar curso <i class="fas fa-chevron-right ml-2"></i></a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>

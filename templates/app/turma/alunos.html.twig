@@ -1,0 +1,104 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <style>
+        table, th {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        table, th, td {
+            padding: 10px 0px;
+        }
+
+        teble, td {
+            border-bottom: 1px solid #C4C4C4;
+            font-weight: normal;
+        }
+
+        tbody {
+            border-top: 1px solid #000000;
+            border-collapse: separate;
+
+        }
+
+        table, tbody {
+            width: 100%;
+        }
+
+        table, tr {
+            background: transparent;
+            cursor: default;
+        }
+        .dropdown-financeiro-editar{
+            display: none;
+        }
+        .button-financeiro-editar{
+            display: block;
+        }
+
+        @media (max-width: 845px){
+            .dropdown-financeiro-editar{
+                display: block;
+            }
+            .button-financeiro-editar{
+                display: none;
+            }
+        }
+    </style>
+    <div class="pt-3 row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}" title="Ir para o início">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item"><a href="{{ path('app_curso') }}" title="Voltar para a lista de cursos">Cursos</a>
+                </li>
+                <li class="breadcrumb-item"><a href="{{ path('app_curso_gerenciar',{ 'curso_id':turma.curso.id }) }}" title="Voltar para a lista de turmas">Gerenciar</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Alunos</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row mb-5 justify-content-xl-between justify-content-lg-between justify-content-md-between justify-content-sm-between justify-content-center">
+        <h2 class="mr-2">{{ turma.nome }}</h2>
+        <a href="{{ path('app_matricular_aluno',{ 'turma_id':turma.id }) }}" class="btn btn-default shadow-default flex-center-default"><i class="fas fa-plus mr-1"></i> Matricular aluno</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Marículat</th>
+            <th>Nome</th>
+            <th>Data matrícula</th>
+            
+            <th>Pontos</th>
+        
+        </tr>
+        </thead>
+        <tbody>
+        {% for matricula in turma.matriculas %}
+            <tr>
+                <td>{{ matricula.id[:5] }}</td>   
+                <td>{{ matricula.user.nome }}</td>   
+                <td>{{ matricula.data|date("d/m/Y") }}</td> 
+                <!--<td>{{ (attribute(TiposStatusMatricula, matricula.status)|raw) }}</td>-->
+                <td></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Nenhum aluno matriculado</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

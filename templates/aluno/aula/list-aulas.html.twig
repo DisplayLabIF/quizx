@@ -1,0 +1,156 @@
+<style>
+    .modulo-nome{
+        color: #858585;
+    }
+    .aula{
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 18px;
+        min-width: 100% !important;
+        height: 50px;
+        border-bottom: 1px solid #C4C4C4;
+        text-decoration: none !important;
+        color: inherit;
+    }
+    .aula:hover{
+        text-decoration: none !important;
+        color: inherit;
+    }
+    .aula svg{
+        font-size: 18px;
+        color: #fff;
+    }
+
+    .aula img{
+        height: 20px;
+        width: 20px;   
+    }
+    .aula:hover{
+        background: #DADADA;
+        cursor: pointer;
+    }
+    .info-aula{
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 18px;
+        color: #757575;
+    }
+</style>
+
+<div class="mt-4 pb-5">
+    {% for modulo in curso.modulos %}
+        <div class="mb-5">
+            <h2 class="modulo-nome mb-4">{{modulo.nome}}</h2>
+            
+            <div class="mt-3">
+                {% for aula in modulo.aulas %}   
+                    {% set horarioMarcado = false %}           
+                    {% if aula.tipo != 'ao_vivo' %}         
+                        <a 
+                            href="{{ path('aluno_aula_index',{ 'matricula_id': matricula.id, 'aula_id': aula.id }) }}" 
+                            {% if aula.tipo == 'quiz' %}
+                                target="_blank"
+                            {% endif %}
+                            class="aula 
+                                {% if aula_selected is defined and aula.id == aula_selected %}
+                                    text-default
+                                {% else %}
+                                    {% for aulaAssistida in matricula.aulasAssistidas %}
+                                        {% if aula.id == aulaAssistida.id %}
+                                            text-success
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}"
+                        >
+                            <image 
+                                src={% if aula.tipo == 'quiz' %}
+                                        "https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_quiz.svg"
+                                    {% elseif aula.tipo == 'video_aula' %}
+                                        "https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_play.svg" 
+                                    {% elseif aula.tipo == 'texto' %}
+                                        "https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_file.svg"
+                                    {% elseif aula.tipo == 'ao_vivo' %}
+                                        "https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_play.svg"
+                                    {% endif %}
+                                class="mr-2"
+                                draggable="false" 
+                                alt="play"
+                            >
+                            <span class="mr-auto">{{aula.nome}} </span> 
+                        </a>  
+                    {% elseif aula.tipo == 'ao_vivo' %}
+                        {% if aula.horarioDatas|length > 0 %}
+                            {% for horario in aula.horarioDatas %}
+                                {% if horario.turma.id == matricula.turma.id %}
+                                    {% set horarioMarcado = true %}            
+                                    <a 
+                                        href="{{ path('aluno_aula_index',{ 'matricula_id': matricula.id, 'aula_id': horario.id }) }}"                                         
+                                        class="aula 
+                                            {% if aula_selected is defined and horario.id == aula_selected %}
+                                                text-default
+                                            {% else %}
+                                                {% for aulaAssistida in matricula.aulasAssistidas %}
+                                                    {% if aula.id == aulaAssistida.id %}
+                                                        text-success
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}"
+                                    >
+                                        <image 
+                                            src="https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_play.svg"
+                                            class="mr-2"
+                                            draggable="false" 
+                                            alt="play"
+                                        >
+                                        <span class="mr-auto">{{aula.nome}} </span> 
+                                        <span class="info-aula">{{horario.dataAula|date("d/m/Y")}} - {{horario.horaInicio|date('H:i')}} As {{horario.horaTermino|date('H:i')}}</span>
+                                    </a>                                      
+                                {% endif %}
+                            {% endfor %}
+                            {% if horarioMarcado == false %}
+                                <span class="info-aula">Horário não definido</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="info-aula">Horário não definido</span>
+                        {% endif %}
+                    {% endif %}                          
+                {% endfor %}
+            </div>                
+        </div>
+    {% endfor %}
+    {% if  matricula.turma.horarioDatas|length > 0 %}
+        {% set aulasAoVivo = false %}
+        <h2 class="modulo-nome mb-4">Aulas ao vivo</h2>
+                
+        <div class="mt-3">
+            {% for horario in matricula.turma.horarioDatas %}
+                {% if horario.aula == null %}
+                        {% set aulasAoVivo = true %}
+                    <a 
+                        href="{{ path('aluno_aula_index',{ 'matricula_id': matricula.id, 'aula_id': horario.id }) }}" 
+                        class="aula
+                        {% if aula_selected is defined and horario.id == aula_selected %}
+                            text-default
+                        {% endif %}"
+                    >
+                        <image 
+                            src="https://quizclass.s3.sa-east-1.amazonaws.com/assets/images/aula_icone_play.svg"
+                            class="mr-2"
+                            draggable="false" 
+                            alt="play"
+                        > 
+                        <span class="mr-auto">Aula ao vivo </span> 
+                        <span class="info-aula">{{horario.dataAula|date("d/m/Y")}} - {{horario.horaInicio|date('H:i')}} As {{horario.horaTermino|date('H:i')}}</span>
+                    </a>
+                {% endif %}
+            {% endfor %}
+            {% if aulasAoVivo == false %}
+                <p class="aula">
+                    Não possui aulas ao vivo no momento
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

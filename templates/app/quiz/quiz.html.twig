@@ -1,0 +1,27 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizX - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+ {{ parent() }}
+ {{ encore_entry_link_tags('app-quiz') }}
+{% endblock %}
+    
+ {% block body %}
+  {% include 'menus/app.html.twig' %}
+    <div 
+      id="root-quiz" 
+      type="" 
+      data-url-finalizar="{{ path('app_quiz_finalizar', {'quiz_id': '1'}) }}"
+      data-type-quiz="{{app.request.query.get('type')}}"
+      isLogged="false"
+    ></div>
+
+{% endblock %}
+{% block javascripts %}
+ {{ parent() }}
+ {{ encore_entry_script_tags('app-quiz') }}
+ <script>
+    localStorage.setItem('@QuizClassClientId', '{{user_id}}');
+  </script>
+{% endblock %}

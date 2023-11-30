@@ -1,0 +1,33 @@
+.rhap_progress-section {
+  width: 80%;
+}
+
+.rhap_container {
+  background-color: #d8d8d8;
+  min-height: 50px;
+}
+
+.rhap_play-pause-button {
+  font-size: 30px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.rhap_progress-bar,
+.rhap_download-progress,
+.rhap_progress-indicator,
+.rhap_progress-filled {
+  background-color: #fff;
+}
+
+.rhap_current-time {
+  display: none;
+}
+
+.rhap_time {
+  color: white;
+}

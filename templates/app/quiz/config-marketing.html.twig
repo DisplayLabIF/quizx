@@ -1,0 +1,159 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .col-form-label{
+            display: none;
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <style>
+    </style>
+    <div class="pt-4 pb-5">
+        <a href="{{ path('app_opcoes_quiz', {'quiz_id': quiz_id}) }}"><i class="fas fa-chevron-left"></i> Voltar</a>
+        <h2 class="mt-4 mb-4">Configurar tags de acompanhamento e descrição (meta description)</h2>
+        <p>Nesta seção você poderá informar um título, descrição e imagem do seu Quiz para que aparecem quando compartilhar nas redes sociais ou enviar o link para alguém. Insira também, seus scripts de acompanhamento, como: <strong>Google Alalytics, Facebook Pixel, Google Tag Manager</strong>, dentre outros.</p>
+        <br>
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                    {{ form_row(form.titulo) }}
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                    <label for="imagem-config-marketing-quiz">Imagem para Redes Sociais (meta)</label>
+                    <div class="mb-3"> 
+                        <div style="display: none;">
+                            {{ form_row(form.image) }}
+                            <input 
+                                id="imagem-config-marketing-quiz" 
+                                type="file" 
+                                style="display: none;"
+                                accept= "image/*"
+                            />
+                        </div>
+                        <label 
+                            id="label-imagem-config-marketing-quiz"
+                            for="imagem-config-marketing-quiz"
+                            class="btn shadow-default btn-default btn-secondary btn-block d-flex align-items-center justify-content-center"
+                        >   
+                            {% if form.vars.value.image %}
+                                <img src="{{form.vars.value.image}}" style="max-height: 45px;"/>
+                            {% else %}
+                                Adicionar imagem
+                            {% endif %}
+                            
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_row(form.descricao) }}
+            <br>
+            <label>Scripts de acompanhamento</label>
+            <br>
+            <hr>
+            <div 
+                class="scripts-externos"
+                data-prototype="
+                    {% apply escape %}
+                        {{ include('app/quiz/collectionScripts.html.twig', { 'script': form.scriptExternos.vars.prototype }) }}
+                    {% endapply %}"
+            >
+                {% for script in form.scriptExternos %}                   
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Posição do script</label>
+                            {{ form_row(script.posicao) }}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label>script</label>
+                            <div class="d-flex flex-row">
+                                {{ form_row(script.script) }}
+                                <a href="#" id="deleteScript" class="remove-script btn shadow-default btn-danger ml-2" style="height: 38px;"><i class="fas fa-trash"></i></a>
+                            </div> 
+                        </div>
+                        <div class="col-12"><hr></div>
+                    </div>    
+                                 
+                {% endfor %}
+            </div>
+            <a href="#" class="add_script_link"><i class="fas fa-plus"></i> Adicionar script</a>
+            {{ form_row(form.salvar) }}
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        $('#imagem-config-marketing-quiz').change(function() {
+            var file = $(this).prop('files')[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('user_id', '{{user_id}}');
+                formData.append('quiz_id', '{{quiz_id}}');
+
+                $('#label-imagem-config-marketing-quiz').html('').append(
+                    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando imagem...'
+                );
+                
+                $.ajax({
+                    type: "POST",
+                    url: '{{quizclass_api}}/upload/outros',
+                    data: formData,
+                    processData: false,  
+                    contentType: false,  
+                }).done(function (data) { 
+                    $('#label-imagem-config-marketing-quiz').html('').append(
+                        `<img src="${data.url}" style="max-height: 45px;"/>`
+                    );
+                    document.getElementById('config_marketing_image').value=(data.url);
+                }).fail(function() {
+                    $('#label-imagem-config-marketing-quiz').html('Erro! Tente novamente');
+                });
+            })
+    </script>
+    <script>
+        jQuery(document).ready(function() {
+            $('.remove-script').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().parent().remove();
+                return false;
+            });
+            var $collectionHolder = $('div.scripts-externos');
+
+            $collectionHolder.data('index', $collectionHolder.children().length);
+            
+            $('.add_script_link').on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder);
+            });
+                
+                
+        });
+
+        function addTagForm($collectionHolder) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<div class=""></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+
+            $('.remove-script').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().parent().remove();
+                return false;
+            });
+        }
+    </script>
+{% endblock %}

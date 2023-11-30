@@ -1,0 +1,17 @@
+fos_rest:
+  routing_loader: false
+  body_listener: true
+  zone:
+    - { path: ^/api/* }
+  view:
+    formats:
+      json: true
+    view_response_listener: force
+  format_listener:
+    rules:
+      - {
+          path: "^/api",
+          priorities: ["json"],
+          fallback_format: json,
+          prefer_extension: false,
+        }

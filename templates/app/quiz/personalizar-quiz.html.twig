@@ -1,0 +1,236 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .label-imagem-background{
+            position: relative;
+        }
+        .remover-imagem{
+            position: absolute;
+            right: 5px;
+            bottom: 2px;           
+            z-index: 1; 
+        }
+
+        .remover-imagem:hover{
+            color: red;
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <div class="pt-4 pb-5">
+        <a href="{{ path('app_opcoes_quiz', {'quiz_id': quiz_id}) }}"><i class="fas fa-chevron-left"></i> Voltar</a>
+        <h2 class="mt-4 mb-4">Personalizar quiz</h2>
+        <p>Customize o design do seu Quiz para se apresentar com a identidade da sua marca.</p>
+        <br>
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">{{ form_row(form.defaultColor) }}</div>
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">{{ form_row(form.primaryColor) }}</div>
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">{{ form_row(form.secondaryColor) }}</div>
+            </div>
+
+
+            <hr>   
+            <br>
+            <label>Personalização apresentação</label>
+            <br><br>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.textPrimaryColor) }}</div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.textSecondaryColor) }}</div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                    <label>Imagem background apresentação</label>
+                    <div class="mb-3"> 
+                        <div style="display: none;">
+                            {{ form_row(form.backgroundImageApresentacao) }}
+                            <input 
+                                id="imagem-background-apresentacao" 
+                                type="file" 
+                                style="display: none;"
+                                accept= "image/*"
+                            />
+                        </div>
+                        <label 
+                            id="label-carregar-imagem-background-apresentacao"
+                            for="imagem-background-apresentacao"
+                            class="label-imagem-background btn shadow-default btn-default btn-secondary btn-block d-flex align-items-center justify-content-center"
+                            style="min-height: 50px;"
+                        >
+                            Adicionar imagem
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.backgroundColorApresentacao) }}</div>
+            </div>
+
+            <label>
+                Comportamento imagem apresentação
+            </label>
+            <button type="button" class="btn" data-toggle="modal" data-target="#explicacaoBackgroundSizeModal" title="Clique aqui e veja a explicação">
+                <i class="fas fa-info-circle "></i>
+            </button>
+            {{ form_row(form.backgroundSizeApresentacao) }}
+
+            
+            <hr>   
+            <br> 
+            <label>Personalização questão</label>
+            <br><br>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.textPrimaryColorQuestao) }}</div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.textSecondaryColorQuestao) }}</div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                    <label>Imagem background questão</label>
+                    <div class="mb-3"> 
+                        <div style="display: none;">
+                            {{ form_row(form.backgroundImageQuestao) }}
+                            <input 
+                                id="imagem-background-questao" 
+                                type="file" 
+                                style="display: none;"
+                                accept= "image/*"
+                            />
+                        </div>
+                        <label 
+                            id="label-carregar-imagem-background-questao"
+                            for="imagem-background-questao"
+                            class="label-imagem-background btn shadow-default btn-default btn-secondary btn-block d-flex align-items-center justify-content-center"
+                            style="min-height: 50px;"
+                        >
+                            Adicionar imagem
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">{{ form_row(form.backgroundColorQuestao) }}</div>
+            </div>
+
+            <label>
+                Comportamento imagem questão
+            </label>
+            <button type="button" class="btn" data-toggle="modal" data-target="#explicacaoBackgroundSizeModal" title="Clique aqui e veja a explicação">
+                <i class="fas fa-info-circle "></i>
+            </button>
+            {{ form_row(form.backgroundSizeQuestao) }}
+        {{ form_end(form) }}
+        <!-- Modal -->
+        <div class="modal fade" id="explicacaoBackgroundSizeModal" tabindex="-1" role="dialog" aria-labelledby="explicacaoBackgroundSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="explicacaoBackgroundSizeModalLabel">Comportamento da imagem do background</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Contain</strong>: aumenta o máximo possível a imagem mantendo a sua proporção (a imagem não fica esticada). A imagem tenta ocupar o espaço inteiro da tela. Quando a imagem e a tela tem diferentes dimensões, as áreas não preenchidas são preenchidas com a cor de fundo.<br>
+                    <strong>Cover</strong>: Ajusta a imagem o mais largamente possível e mantém sua proporção (a imagem não fica esticada). A imagem "cobre" a tela inteira, tanto em altura como em largura. Quando a imagem e a tela têm diferentes dimensões,a imagem ultrapassa os limites da tela em qualquer direção, para continuar mantendo a proporção.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+
+        let imageApresentacao = document.getElementById('personalizacao_quiz_backgroundImageApresentacao').value;
+        let imageQuestao = document.getElementById('personalizacao_quiz_backgroundImageQuestao').value;
+        
+        if(imageApresentacao && imageApresentacao !== undefined && imageApresentacao !==''){
+            $('#label-carregar-imagem-background-apresentacao').html('').append(
+                `<img src="${imageApresentacao}" style="max-height: 45px;"/>
+                <a id="remover-imagem-apresentacao" href="#" class="remover-imagem"><small>remover</small></a>`
+            )
+        }
+
+        if(imageQuestao && imageQuestao !== undefined && imageQuestao !==''){
+            $('#label-carregar-imagem-background-questao').html('').append(
+                `<img src="${imageQuestao}" style="max-height: 45px;"/>
+                <a id="remover-imagem-questao" href="#" class="remover-imagem"><small>remover</small></a>`
+            )
+        }
+
+        $('#imagem-background-apresentacao').change(function() {
+            var file = $(this).prop('files')[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('quiz_id', '{{quiz_id}}');
+
+                $('#label-carregar-imagem-background-apresentacao').html('').append(
+                    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando imagem...'
+                );
+                $.ajax({
+                    type: "POST",
+                    url: '{{quizclass_api}}/upload-material/{{user_id}}',
+                    data: formData,
+                    processData: false,  
+                    contentType: false,  
+                }).done(function (data) { 
+                    $('#label-carregar-imagem-background-apresentacao').html('').append(
+                        `<img src="${data.url}" style="max-height: 45px;"/>
+                        <a id="remover-imagem-apresentacao" href="#" class="remover-imagem"><small>remover</small></a>`
+                    );
+                    document.getElementById('personalizacao_quiz_backgroundImageApresentacao').value=(data.url);
+                }).fail(function() {    
+                    $('#label-carregar-imagem-background-apresentacao').html('Erro! Tente novamente');
+                });
+            })
+
+        $('#imagem-background-questao').change(function() {
+            var file = $(this).prop('files')[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('quiz_id', '{{quiz_id}}');
+
+                $('#label-carregar-imagem-background-questao').html('').append(
+                    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Enviando imagem...'
+                );
+                $.ajax({
+                    type: "POST",
+                    url: '{{quizclass_api}}/upload-material/{{user_id}}',
+                    data: formData,
+                    processData: false,  
+                    contentType: false,  
+                }).done(function (data) { 
+                    $('#label-carregar-imagem-background-questao').html('').append(
+                        `<img src="${data.url}" style="max-height: 45px;"/>
+                        <a id="remover-imagem-questao" href="#" class="remover-imagem"><small>remover</small></a>`
+                    );
+                    document.getElementById('personalizacao_quiz_backgroundImageQuestao').value=(data.url);
+                }).fail(function() {
+                    $('#label-carregar-imagem-background-questao').html('Erro! Tente novamente');
+                });
+            })
+
+            $('#remover-imagem-apresentacao').click(e => {
+                e.preventDefault();
+                document.getElementById('personalizacao_quiz_backgroundImageApresentacao').value='';
+                $('#label-carregar-imagem-background-apresentacao').html('').append('Adicionar imagem');
+            })
+
+            $('#remover-imagem-questao').click(e => {
+                e.preventDefault();
+                document.getElementById('personalizacao_quiz_backgroundImageQuestao').value='';
+                $('#label-carregar-imagem-background-questao').html('').append('Adicionar imagem');
+            })
+    </script>
+    
+{% endblock %}

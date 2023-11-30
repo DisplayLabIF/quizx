@@ -1,0 +1,55 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+    hr{
+        margin: 0;
+        font-weight
+    }
+    .iformacao{
+        font-family: Rubik;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 18px;
+        color: #9F9C9C;
+    }
+</style>
+    <div class="container pt-4">
+        {% for message in app.flashes('notice') %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endfor %}
+        
+        {{ include('app/minhaConta/nav.html.twig',{page: 'email'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.remetente) }}
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.endereco) }}
+                    </div>
+                </div> 
+                {{ form_row(form.salvar) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

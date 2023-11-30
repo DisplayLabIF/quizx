@@ -1,0 +1,29 @@
+    {% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Novo Curso{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+    <div class="pt-5">
+        <a href="{{ path('app_curso') }}"><i class="fas fa-chevron-left" title="Voltar"></i> Voltar para cursos</a>
+        <h3 class="mt-2 mb-2">Novo Curso</h3>
+        {{ include('app/curso/_formCurso.html.twig') }}
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        let imageCurso = document.getElementById('novo_curso_imagemCurso').value;
+        
+        if(imageCurso && imageCurso !== undefined && imageCurso !==''){
+            $('#label-carregar-imagem-curso').html('').append(
+                `<img src="${imageCurso}" style="max-height: 45px;"/>`
+            )
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,27 @@
+<div class="col-md-4">
+    {{ form_row(form.nome) }}
+</div>
+
+<div class="col-md-4">
+    {{ form_row(form.tipo) }}
+</div>
+<div class="col-md-4">
+    <label>Arquivo</label>
+
+    <div id="div-file-upload" class="flex-row-default align-items-center" style="display: none;">
+        {{ form_row(form.file) }}
+        <a href="#" id="deletaMaterial"class="remove-material btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+        <input id="file-upload" class="file-upload" type="file" style="display: none;"/>
+    </div>
+
+    <div id="div-label-carregar-material" class="flex-row-default">  
+        <label 
+            id="label-carregar-material"
+            class="btn shadow-default btn-secondary d-flex align-items-center justify-content-center"
+            style="min-height: 50px; width: 100%;"
+        >
+            Arquivo
+        </label>
+        <a href="#" id="deletaMaterial"class="remove-material btn shadow-default btn-danger"><i class="fas fa-trash"></i></a>
+    </div>
+</div>

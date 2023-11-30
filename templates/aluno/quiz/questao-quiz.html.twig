@@ -1,0 +1,98 @@
+{% extends 'quiz.html.twig' %}
+    
+ {% block title %}QuizX - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+
+    <div class="row align-items-center pt-2">
+        <div class="col-md-11 col-xs-11 col-lg-11">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        <div class="col-md-1 col-xs-1 col-lg-1 text-right">
+            <a href="" class="btn btn-sx btn-danger"><i class="fa fa-times"></i></a>
+        </div>
+    </div>
+    <form action="{{path('aluno_verificar_resposta_questao', {'quiz_id': data.quiz_id, 'questao_id': data.questao.id})}}" method="POST" class="p-5">
+
+    <div class="row">
+        <span class="pergunta">
+        {{data.questao.pergunta | raw}}
+        </span>
+    </div>
+    <div class="row opcoes">
+            <ul>
+                {% for opcao in data.questao.opcoes %}
+                    {% if data.questao.tipo == 'MULTIPLA_ESCOLHA' %}
+                        <li id="item{{opcao.id}}" class={{ opcoes_respondidas is defined and opcao.id in data.opcoes_respondidas ? "checked" : "" }}>
+                            <input type="checkbox" id="{{opcao.id}}" {{ opcoes_respondidas is defined and opcao.id in data.opcoes_respondidas ? "checked" : ""}} name="opcao_respondida[]" value="{{opcao.id}}" onchange="changeBackgroundLi(this)"/>
+                            <label for="{{opcao.id}}">{{ opcao.texto }}</lavel>
+                        </li>
+                        {% elseif data.questao.tipo == 'V_F' %}
+                        <li id="item{{opcao.id}}">
+                            <label for="V{{opcao.id}}" class="V_F">V</label>
+                            <input type="radio" id="V{{opcao.id}}" class="V_F" name="{{opcao.id}}" value="V">
+                            
+                            <input type="radio" id="F{{opcao.id}}" class="V_F" name="{{opcao.id}}" value="F">
+                            <label for="F{{opcao.id}}" class="V_F">F</label>
+
+                            <span style="margin-left: 30px; font-size: 18px;">{{opcao.texto}} </span>
+                        </li>
+
+                     {% endif %}
+                {% endfor %}
+            </ul>
+    </div>
+
+    <div class="footer pt-4">
+        {% if data.correto is not defined %}
+        <div class="row">
+            <div class="col">
+                <a href="" class="btn btn-primary btn-lg shadow-default">PULAR</a>
+            </div>
+
+            <div class="col text-right">
+                <button type="submit" class="btn btn-secondary btn-lg shadow-default">VERIFICAR</button> 
+            </div>
+        </div>
+        {% else %}
+        <div class="row shadow-default {{ (data.correto) ? "resposta-correta" : "resposta-errada" }}">
+            <div class="col p-4">
+                {% if data.correto %}
+                    <h2>Acertou!</h2>
+                {% endif %}
+                {% if data.correto == false or data.correto == 0 %}
+                    <h2>Errou!</h2>
+                {% endif %}
+            </div>
+            <div class="col p-4 text-right">
+                <a href="{{path('app_responder_quiz_questoes', {'quiz_id': data.quiz_id, 'user_id': app.user.id})}}" class="btn btn-secondary shadow-default">Continuar</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+    </form>
+
+{% endblock %}
+{% block javascripts %}
+ {{ parent() }}
+ <script>
+    
+    function changeBackgroundLi(element) {
+        element.checked ? 
+            document.getElementById(`item${element.id}`).classList.add('checked') :
+            document.getElementById(`item${element.id}`).classList.remove('checked')
+    }
+    
+    
+ </script>
+{% endblock %}
+

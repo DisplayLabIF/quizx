@@ -1,0 +1,75 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+</style>
+    <div class="container pt-4">  
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-{{ label }} alert-dismissible fade show">
+                            {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}    
+        {{ include('app/minhaConta/nav.html.twig',{page: 'dados_acesso'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.email) }}
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6">
+                        {{ form_row(form.password.first) }}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            {{ form_label(form.password.second) }}
+                            <div class="form-error">
+                                {{ form_errors(form.password.first) }}
+                            </div>
+                            {{ form_widget(form.password.second) }}
+                        </div>
+                    </div>
+                </div> 
+                {{ form_row(form.alterarDados) }}
+            {{ form_end(form) }}
+            </br></br>
+            <form action="{{ path('app_minha_conta_dados_acesso_delete') }}">
+                <label>Quero deletar minha conta</label></br></br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Motivo</label>
+                        <select class="form-default form-control" required>
+                            <option value={{null}}>Selecione uma opção</option>
+                            <option value="INTERESSE">Não tenho mais interesse</option>
+                            <option value="NAO_ATENDE">Não me atende</option>
+                            <option value="OUTRO">Outro motivo</option>
+                        </select>
+                    </div>
+                </div>   </br>
+                <button class="btn shadow-default btn-danger"
+                        type="submit">Deletar conta
+                </button>
+            </form>
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

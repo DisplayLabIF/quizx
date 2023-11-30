@@ -1,0 +1,119 @@
+{% extends 'aluno.html.twig' %}
+    
+{% block title %}QuizX - Aula {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    
+    <style>
+        .caminho-aula{
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 18px;
+            color: #9F9C9C;
+        }
+        .file-aula{
+            width: 100%;
+            height: 70vh;
+            background: #2F2C2C;
+        }
+        .descricao-aula p{
+            word-wrap: break-word;
+            {# text-align: justify; #}
+        }
+        .descricao-aula img{
+            max-width: 100%;
+            height: auto;
+        }
+        .descricao-aula table{
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <div class="bg-gray-light">
+        <div class="container">
+            <p class="caminho-aula pt-3 pb-3">
+                {% if aulaAoVivo is defined %}
+                    {% if aulaAoVivo.aula != null %}
+                        {{aulaAoVivo.aula.modulo.curso.nome}} > {{aulaAoVivo.aula.modulo.nome}} > {{aulaAoVivo.aula.nome}}
+                    {% else %}
+                        Aula ao vivo
+                    {% endif %}
+                {% else %}
+                    {{aula.modulo.curso.nome}} > {{aula.modulo.nome}} > {{aula.nome}}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        {% if aulaAoVivo is defined %}
+            <div
+                id="root-live-bridge" 
+                data-client-id="{{ app.request.server.get('LIVE_BRIDGE_CLIENT_ID') }}"
+                data-session-id="{{aulaAoVivo.id}}"
+                data-style='{"width": "100%", "height" : "90%"}'
+                data-nickname="{{app.user.nome}}"
+                {# data-is-host="true" #}
+            ></div>
+            <script src="https://live-bridge.s3.sa-east-1.amazonaws.com/js/2.live-bridge.chunk.js"></script>
+            <script src="https://live-bridge.s3.sa-east-1.amazonaws.com/js/main.live-bridge.chunk.js"></script>
+            <script src="https://live-bridge.s3.sa-east-1.amazonaws.com/js/runtime-main.live-bridge.js"></script>
+        {% elseif aula.tipo == 'video_aula'%}
+            {% set videoId = ''  %}
+            {% if aula.file != null and aula.file != '' %}
+                {% set videoId = aula.file|split("/")[3]  %}
+            {% endif %}
+            <iframe  class="file-aula border-radius" src="https://player.vimeo.com/video/{{videoId}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>            
+        {% endif %}
+
+        {% if aulaAoVivo is defined %}
+            {% if aulaAoVivo.aula != null %}
+                <div class="descricao-aula mt-4">{{aulaAoVivo.aula.descricao|raw}}</div>
+
+                <p class="font-weight-bold">Anexos</p>
+            {% endif %}
+            <hr>
+
+            {{ include('aluno/aula/list-aulas.html.twig', {'matricula': matricula, 'curso': matricula.turma.curso, 'aula_selected': aulaAoVivo.id }) }}
+        {% else %}
+            <div class="descricao-aula mt-4">{{aula.descricao|raw}}</div>
+
+            <p class="font-weight-bold">Anexos</p>
+            <div class="d-flex flex-column">
+                {% for anexo in aula.materiais %}
+                    {% if anexo.tipo != 'video' %}
+                        <a href="{{anexo.file}}" class="btn btn-default shadow-default flex-row-default mb-3 text-center justify-content-center" style="max-width: 300px;"{% if anexo.tipo == 'link' %}target="_blank"{% endif %}>{{anexo.nome}}</a>
+                    {% else %}
+
+                        {% set videoId = ''  %}
+                        {% if anexo.file != null and anexo.file != '' %}
+                            {% set videoId = anexo.file|split("/")[3]  %}
+                        {% endif %}
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe  class="embed-responsive-item" src="https://player.vimeo.com/video/{{videoId}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <hr>
+
+            {{ include('aluno/aula/list-aulas.html.twig', {'matricula': matricula, 'curso': aula.modulo.curso, 'aula_selected': aula.id }) }}
+            
+        {% endif %}
+    </div>
+
+
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://player.vimeo.com/api/player.js"></script>
+{% endblock %}

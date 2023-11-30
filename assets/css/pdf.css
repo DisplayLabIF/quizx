@@ -1,0 +1,110 @@
+/* @import url('../libs/assets/font-awesome/css/font-awesome.css');
+@import url('../libs/assets/font-awesome/css/font-awesome.css'); */
+@import url("../../node_modules/bootstrap/dist/css/bootstrap.min.css");
+
+.v-m {
+  vertical-align: middle !important;
+}
+
+.v-t {
+  vertical-align: top !important;
+}
+
+.v-b {
+  vertical-align: bottom !important;
+}
+
+.font-normal {
+  font-weight: normal;
+}
+
+.font-thin {
+  font-weight: 300;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-4x {
+  font-size: 4em;
+}
+
+.text-3x {
+  font-size: 3em;
+}
+
+.text-2x {
+  font-size: 2em;
+}
+
+.text-xl {
+  font-size: 32px;
+}
+
+.text-lg {
+  font-size: 24px;
+}
+
+.text-md {
+  font-size: 16px;
+}
+
+.text-base {
+  font-size: 14px;
+}
+
+.text-sm {
+  font-size: 13px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+.text-xxs {
+  font-size: 10px;
+}
+
+.text-u-c {
+  text-transform: uppercase;
+}
+
+.text-l-t {
+  text-decoration: line-through;
+}
+
+.text-u-l {
+  text-decoration: underline;
+}
+
+.text-ellipsis {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-fade {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-fade:after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 70%;
+  height: 1.2em;
+  text-align: right;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
+  content: "";
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+.new-page {
+  page-break-before: always;
+}

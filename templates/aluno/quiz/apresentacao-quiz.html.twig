@@ -1,0 +1,32 @@
+{% extends 'quiz.html.twig' %}
+    
+ {% block title %}QuizX - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <div class="text-center p-5">
+        <h1>{{quiz.nome}}</h1>
+        <p class="pt-5">
+        {% if quiz.assuntos | length > 0 %}
+            Assuntos do Quiz: {% for assunto in quiz.assuntos%} {{assunto}} {% endfor %} <br>
+        {% endif %}
+            Quantidade de questões: {{ quiz.questoes | length }}
+        </p> 
+        {% if quiz.configuracaoQuiz.observacao %}
+        <p>
+            <strong>{{ quiz.configuracaoQuiz.observacao }}</strong>
+        </p>
+        {% endif %}
+
+        <a href="{{ path('app_responder_quiz_questoes', {'quiz_id': quiz.id, 'user_id': user.id})}}" class="mt-5 btn btn-lg btn-primary shadow-default"><strong><i class="fa fa-check"></i> Iniciar Quiz</strong></a>
+    </div>
+{% endblock %}
+{% block javascripts %}
+ {{ parent() }}
+ 
+{% endblock %}
+

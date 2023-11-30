@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://s3-sa-east-1.amazonaws.com/quizclass/assets/css/quizclass.chunk.css" />
+    <link rel="stylesheet" href="https://s3-sa-east-1.amazonaws.com/quizclass/assets/css/main.quizclass.chunk.css" />
+
+    <title>{% if nameApp is defined %}{{ nameApp }}{% else %}QuizClass 2.0{% endif %} - Responder Quiz</title>
+    <style>
+        html {
+            height: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            height: 100%;
+            min-height: 100%;
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+
+<div id="root-quiz-visualizar" data-quiz-id="{{ quiz.id }}" data-user-id="{{ user_id }}" data-type="QUIZ"></div>
+
+<script src="https://s3-sa-east-1.amazonaws.com/quizclass/assets/js/runtime-main.quizclass.js"></script>
+<script src="https://s3-sa-east-1.amazonaws.com/quizclass/assets/js/quizclass.chunk.js"></script>
+<script src="https://s3-sa-east-1.amazonaws.com/quizclass/assets/js/main.quizclass.chunk.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt_br">
+<head>
+    <meta charset="utf-8"/>
+    <title>Relatório semanal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    {# {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %} #}
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Rubik", sans-serif;
+        }
+
+        .flexrow {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            margin-right: 2%;
+            
+        }
+        .flexrow > div:last-child {
+            margin-right: 0;
+        }
+
+        .header{
+            {# display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center; #}
+            padding: 0;
+            margin: 0;
+        }
+
+        .div-estatisticas{
+            {# display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center; #}
+        }
+
+        .div-respostas-recebidas,
+        .div-leads-capturados,
+        .div-variacao-respostas{
+            {# display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; #}
+            display: box;                   /* As specified */
+            display: -moz-box;              /* Mozilla */
+            display: -webkit-box;           /* WebKit */
+            box-align: center;              /* As specified */
+            -moz-box-align: center;         /* Mozilla */
+            -webkit-box-align: center;
+            -moz-box-pack: center;             /* Mozilla */
+            -webkit-box-pack: center;
+             -moz-box-orient: vertical; /* Mozilla */
+  -webkit-box-orient: vertical; /* WebKit */
+            width: 32%;
+            height: 150px;
+            border-radius: 4px;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 15px 15px 0 15px;        
+        }
+        .div-respostas-recebidas p,
+        .div-leads-capturados p,
+        .div-variacao-respostas p{
+            text-align: center;
+            
+        }
+        .div-respostas-recebidas p strong,
+        .div-leads-capturados p strong,
+        .div-variacao-respostas p strong{
+            font-size: 30px;
+        }
+
+        .data-relatorio{
+            font-size: 13px;
+        }
+
+        .respostas-leads-por-mes{
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .div-respostas-leads-por-mes{
+            {# display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between; #} 
+            padding: 30px 30px 0 30px; 
+            border: 1px solid black;
+            width: 100%;
+            height: 300px;
+            border-radius: 4px;
+            z-index: 10;
+            position: relative;
+            
+        }
+
+        .div-barra-respostas-leads-por-mes{
+            {# display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center; #}
+            display: box;                   /* As specified */
+            display: -moz-box;              /* Mozilla */
+            display: -webkit-box;           /* WebKit */
+            box-align: end;              /* As specified */
+            -moz-box-align: end;         /* Mozilla */
+            -webkit-box-align: end;
+            -moz-box-pack: center;             /* Mozilla */
+            -webkit-box-pack: center;
+                    
+            width: 50px;
+            height: 100%;
+            position: relative;
+        }
+        .m-0{
+            margin: 0;
+        }
+        .font-weight-bold{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    {% set mes = { 
+        '01': ['Jan', 'Janeiro'], 
+        '02': ['Fev', 'Fevereiro'], 
+        '03': ['Mar', 'Março'], 
+        '04': ['Abr', 'Abril'], 
+        '05': ['Mai','Maio'], 
+        '06': ['Jun', 'Junho'], 
+        '07': ['jul', 'Julho'], 
+        '08': ['Ago', 'Agosto'], 
+        '09': ['Set', 'Setembro'], 
+        '10': ['Out', 'Outubro'], 
+        '11': ['Nov', 'Novembro'], 
+        '12': ['Dez', 'Dezembro']
+    } %}
+
+    <div class="pt-4 pl-2 pr-2">
+
+        <div class="header flexrow">
+            <div>
+                <p class="font-weight-bold m-0">Relatório semanal</p>
+                <p class="data-relatorio m-0">{{dataRelatorio}}</p>
+            </div>
+            <a href="https://quizclass.com.br/" style="text-decoration:none" target="_blank"><img alt="Quiz Class" src="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/logo-quiizclass.png" height="21"></a>
+        </div> 
+        
+        <hr>
+        <br>
+        <div class="div-estatisticas flexrow">
+            <div class="div-respostas-recebidas" style="background: #FFE132;">
+                <p>Respostas recebidas<br>na semana</p>
+                <p><strong>{{quantidadeRespostaSemana}}</strong></p>
+            </div>
+            <div class="div-leads-capturados" style="background: #86FFA8;">
+                <p>Leads captados<br>na semana</p>
+                <p><strong>{{quantidadeLeadsSemana}}</strong></p>
+            </div>
+            <div class="div-variacao-respostas" style="background: #89EAFF;">
+                <p>Variação de respostas em relação<br>à semana passada</p>
+                <p><strong>
+                    {% if quantidadeRespostaSemana > quantidadeRespostaSemanaAnterior %}
+                        +{{ ( ((quantidadeRespostaSemana - quantidadeRespostaSemanaAnterior) * 100) / quantidadeRespostaSemana )|round }}%
+                    {% elseif quantidadeRespostaSemana == 0 %}
+                        -100%
+                    {% elseif quantidadeRespostaSemana == quantidadeRespostaSemanaAnterior %}
+                        +0%
+                    {% else %}
+                        -{{ (((quantidadeRespostaSemanaAnterior * 100) / quantidadeRespostaSemana) - 100)|round }}%
+                    {% endif %}
+                </strong></p>
+            </div>
+        </div> 
+        
+        <br>
+        
+        {% set maiorNumeroRespostas = 0 %}
+        {% for respostaPorMes in respostasPorMes %}
+            {% if respostaPorMes['qtdRespostas'] > maiorNumeroRespostas %}
+                {% set maiorNumeroRespostas = respostaPorMes['qtdRespostas'] %}
+            {% endif %}
+        {% endfor %}
+
+        <p class="respostas-leads-por-mes" >Respostas e Leads por mês</p>
+        <div class="div-respostas-leads-por-mes flexrow">
+            {% for respostaPorMes in respostasPorMes %}
+                <div class="div-barra-respostas-leads-por-mes">
+                    <div class="respsotas" style="margin-bottom: 1px; width: 20px;height: {{ (respostaPorMes['qtdRespostas'] * 100) / maiorNumeroRespostas }}%; background: #FFE132; position: relative;">
+                        <span style="position: absolute; top:-15px;left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%); font-size: 12px;">{{respostaPorMes['qtdRespostas']}}</span>
+
+                        {% for leadPorMes in leadsPorMes %}
+                            {% if respostaPorMes['yearMonth'] == leadPorMes['yearMonth'] %}
+                                <div class="leads" style="width: 20px;height: {{ (leadPorMes['quantidadeLeads'] * 100) / maiorNumeroRespostas }}%; background: #86FFA8; position: absolute; bottom: 0;">
+                                    <span style="position: absolute; top:0px;left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%); font-size: 12px;">{{leadPorMes['quantidadeLeads']}}</span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                    <p style="margin: 0;position:absolute; bottom: -30px;left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%)">
+                        <strong>{{ mes[respostaPorMes['yearMonth']|split('-')[0]][0] }}</strong>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <br><br><br><br>
+        <p>
+            Total de respostas obtidas (todo o período): <strong>{{quantidadeRespostaTotal}}</strong>
+        </p>
+        <br>
+        <p>
+            {% if respostasPorMes|length == 0 %}
+                Total de respostas obtidas (mês - {{mes["now"|date("m")][1]}}): 
+                <strong> 0</strong>
+            {% else %}
+                Total de respostas obtidas (mês - {{ mes[respostasPorMes[respostasPorMes|length - 1]['yearMonth']|split('-')[0]][1] }}): 
+                <strong> {{ respostasPorMes[respostasPorMes|length - 1]['qtdRespostas'] }}</strong>
+            {% endif %}
+        </p>
+        <br>
+        <p>
+             {% if leadsPorMes|length == 0 %}
+                Total de Leads obtidos (mês - {{ mes["now"|date("m")][1] }}): 
+                <strong> 0</strong>
+            {% else %}
+                Total de Leads obtidos (mês - {{ mes[leadsPorMes[leadsPorMes|length - 1]['yearMonth']|split('-')[0]][1] }}): 
+                <strong> {{ leadsPorMes[leadsPorMes|length - 1]['quantidadeLeads'] }}</strong>
+            {% endif %}
+        </p>
+        <br>
+        <p>
+            Quizzes criados: <strong>{{quantidadeQuizzesCriados}}</strong>
+        </p>
+        <br>                                       
+
+    </div> 
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .form-check{
+            padding-left: 0;
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <div class="container pt-4">
+        {{ include('app/minhaConta/nav.html.twig',{page: 'campos_personalizados'}) }}
+        <div class="mb-3"></div>
+        <a href="{{ path('app_campos_personalizados') }}"><i class="fas fa-chevron-left"></i> Voltar para campos personalizados</a>
+        <h2 class="mt-3">Editar campo personalizado</h2>
+        <div class="pt-4">
+            {{ include('app/minhaConta/_formCamposPersonalizados.html.twig') }}
+        </div>
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        jQuery(document).ready(function() {
+            $('.remove-opcao').click(function(e) {
+                e.preventDefault();
+                $(this).parent().remove();
+                return false;
+            });
+            var $collectionHolder = $('div.opcoes-campos-personalizados');
+
+            $collectionHolder.data('index', $collectionHolder.children().length);
+            
+            $('.add_opcao_link').on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder);
+            });
+                
+                
+        });
+
+        function addTagForm($collectionHolder) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index + 1);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<div class=""></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+
+            $('.remove-opcao').click(function(e) {
+                e.preventDefault();
+                $(this).parent().remove();
+                return false;
+            });
+        }
+    </script>
+{% endblock %}

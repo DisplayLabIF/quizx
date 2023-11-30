@@ -1,0 +1,95 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <style>
+        table, th {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        table, th, td {
+            padding: 10px 0px;
+        }
+
+        teble, td {
+            border-bottom: 1px solid #C4C4C4;
+            font-weight: normal;
+        }
+
+        tbody {
+            border-top: 1px solid #000000;
+            border-collapse: separate;
+
+        }
+
+        table, tbody {
+            width: 100%;
+        }
+
+        table, tr {
+            background: transparent;
+            cursor: default;
+        }
+    </style>
+    <div class="pt-3 row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}" title="Ir para o início">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item"><a href="{{ path('app_curso') }}" title="Voltar para a lista de cursos">Cursos</a>
+                </li>
+                <li class="breadcrumb-item"><a href="{{ path('app_curso_gerenciar',{ 'curso_id':turma.curso.id }) }}" title="Voltar para a lista de turmas">Gerenciar</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Aulas</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="mb-5">
+        <h2>{{ turma.nome }}</h2>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Data aula</th>
+            <th>Hora início</th>
+            <th>Hora término</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for horaioData in turma.horarioDatas %}
+            <tr>
+                <td 
+                    {% if horaioData.chamada %}
+                        class="text-success font-weight-bold"
+                    {% elseif (date(horaioData.dataAula)|date("d/m/Y")) == (date('now')|date("d/m/Y")) %}
+                        class="font-weight-bold"
+                    {% endif %}
+                >
+                    {{ horaioData.dataAula|date("d/m/Y") }}
+                </td> 
+                <td>{{ horaioData.horaInicio|date("H:i") }}</td> 
+                <td>{{ horaioData.horaTermino|date("H:i") }}</td> 
+                <td align="right"> 
+                    <a href="{{ path('app_curso_turma_aula_aovivo', { 'aula_id' : horaioData.id }) }}" class="btn btn-sm bg-default shadow-default m-1">Ir para aula ao vivo</a>
+                    <a href="{{ path('app_curso_turma_aulas_chamada', { 'aula_id' : horaioData.id }) }}" class="btn btn-sm bg-default shadow-default m-1">Fazer chamada</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Nenhuma aula encontrada</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

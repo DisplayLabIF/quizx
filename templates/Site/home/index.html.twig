@@ -1,0 +1,87 @@
+
+{% extends 'site.html.twig' %}
+{% block canonical %}<link rel="canonical" href="https://quizclass.com.br"/>{% endblock %}
+ {% block title %}QuizX | TCC{% endblock %}
+    
+ {% block body %}
+<div class="container">
+    <div class="row justify-content-center pt-2 mb-5">
+
+            <img src="{{ asset('build/images/logo_quizx.svg') }}" alt="logo" width="200" />
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-6 col-xs-12 pr-5" style="border-right: 0.5px solid #00324A;">
+            <h1>Professor</h1>
+            {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="row mt-3">
+                            <div class="col">
+                               <div class="alert alert-{{ label }} alert-dismissible fade show">
+                                    {{ message }}
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+            {% endfor %}   
+
+            <form class="mt-5" method="POST" action="login/professor" name="form-professor" id="form-professor" >
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" value="{{ last_username }}" name="email" aria-describedby="Insira o e-mail cadastrado no QuizX." placeholder="Insira o e-mail cadastrado no QuizX">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Insira a senha cadastrada no QuizX">
+                </div>
+                <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+                <button type="submit" class="btn btn-primary btn-block btn-lg" for="form-professor">ENTRAR</button>
+            </form>
+            <a href="">Esqueceu a senha?</a>
+            <a href="{{path('site_criar_quiz_cadastrar')}}" class="btn btn-secondary btn-block btn-lg mt-5">CRIAR CONTA</a>
+        </div>
+        <div class="col-md-6 col-6 col-xs-12 pl-5">
+            <h1>Aluno</h1>
+
+            
+                <!--<div class="mb-3 mb-5">
+                    <label for="codigo-quiz" class="form-label">Código do Quiz</label>
+                    <input type="text" class="form-control" id="codigo-quiz" aria-describedby="Insira o código do quiz informado pelo seu professor." placeholder="Insira o código do quiz informado pelo seu professor">
+                </div>
+                <strong>ou, faça login para acessar a sua área do aluno</strong>-->
+                    <form class="mt-5" method="POST" action="login/aluno" name="form-aluno" id="form-aluno" >
+                        <div class="mb-3 mt-3">
+                            <label for="email-aluno" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="email-aluno" name="email" required aria-describedby="Insira o e-mail cadastrado no QuizX pelo seu professor" placeholder="Insira o e-mail cadastrado no QuizX pelo seu professor">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password-aluno" class="form-label">Senha</label>
+                            <input type="password" name="password" required class="form-control" id="password-aluno">
+                        </div>
+                        <input type="hidden" name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                        >
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" for="form-aluno">ENTRAR</button>
+                    </form>
+
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="col">
+    </div>
+    <div class="col text-right" style="font-size: 10px;">
+    Projeto de TCC desenvolvido por Ewerton Cardoso<br/>
+IFNMG - Campus Januária<br/>
+Disponível em: https://github.com/ewertoncode/quizx<br/>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

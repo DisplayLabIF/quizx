@@ -1,0 +1,253 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <style>
+        .title{
+            font-weight: bold;
+            font-size: 30px;
+            line-height: 36px;
+            color: #4A4A4A;
+        }
+        .btn{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+        }
+        .bnt-info-basic,
+        .bnt-info-integrar,
+        .bnt-info-personalizar-aparencia,
+        .bnt-info-personalizar-email,
+        .bnt-info-config-marketing{
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 20px;
+            background: #FFE132;          
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+            color: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+        }
+        .bnt-info-basic{
+            top: -10px;
+            left: 55px;   
+        }
+        .bnt-info-integrar{
+            top: -10px;
+            left: 150px;            
+        }
+        .bnt-info-personalizar-aparencia{
+            top: -10px;
+            left: 150px; 
+        }
+        .bnt-info-personalizar-email{
+            top: -10px;
+            left: 110px; 
+        }
+        .bnt-info-config-marketing{
+            top: -10px;
+            left: 180px; 
+        }
+        .bnt-info-basic p, 
+        .bnt-info-integrar p,
+        .bnt-info-personalizar-aparencia p,
+        .bnt-info-personalizar-email p,
+        .bnt-info-config-marketing p{
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            margin: 0;
+        }
+        .image-copiar-url-responder-quiz{
+            cursor: pointer;
+        }
+    </style>
+    <div class="pt-4 pb-5">
+        <a href="{{ path('app_quiz_finalizar', {'quiz_id': quiz_id}) }}" class="btn-voltar-edicao"><i class="fas fa-chevron-left"></i> Voltar para a página de configuração do meu Quiz</a>
+        <div class="mt-4 mb-4 d-flex align-items-center">
+            <img src="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/finalizar-quiz-congrats.png" class="imagem mr-3"/>
+            <div>
+                <h1 class="title">Quiz finalizado com sucesso!</h1>
+                <p class="m-0">
+                    Link do quiz: <a href="{{ path('app_responder_quiz', {'codigo': quiz_codigo}) }}" target="_blank">
+                        https://quizx.com.br/responder/{{quiz_codigo}}
+                    </a>
+                    <input type="hidden" id="value-copiar-url-responder-quiz" value="https://quizclass.com.br/responder/{{quiz_codigo}}">
+                    <image 
+                        id="copiar-url-responder-quiz" 
+                        src="https://quizclass.s3-sa-east-1.amazonaws.com/assets/images/insert_link_24px_outlined.jpg" 
+                        class="image-copiar-url-responder-quiz"
+                    >
+                </p>
+            </div>
+        </div>   
+        <div class="row" style="padding-left: 15px;">
+            <a href="{{ path('app_responder_quiz', {'codigo': quiz_codigo}) }}" target="_blank" class="btn btn-primary mr-2 mb-3">
+                <i class="far fa-eye mr-2"></i> Visualizar Quiz
+            </a>
+            
+            <button onclick="showModal()" class="btn btn-primary mr-2 mb-3" style="position: relative;">
+                <i class="fas fa-print mr-2"></i> Imprimir 
+            </button>
+        </div>
+        
+        <a href="{{ path('app_quiz_index')}}" class="btn shadow-default btn-default d-flex align-items-center justify-content-center font-weight-bold" style="width: 204px;">
+            VOLTAR À LISTAGEM
+        </a>
+    </div>
+    {{ include('app/quiz/modal/modalPdf.html.twig') }}
+    
+    <!-- Modal -->
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="modalEviarEmailQuiz{{quiz_id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Faça uma lista e envie por email
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idQuiz" name="idQuiz">
+                    <select class="form-control emails" style="width: 100%;"></select>
+                    <small>Separe os e-mails com ';'. Exemplo: joao@gmail.com; maria@gmail.com</small>
+                    <button id="btn_enviar_emails" type="submit" class="btn btn-default btn-sm"><i class="fas fa-paper-plane mr-1"></i> Enviar</button>
+                </div>
+                <div class="modal-footer">
+                    <div class="mr-auto">
+                        <div id="box-enviando" style="display: none;">Enviando...</div>
+                    </div>
+                    <button type="button" class="btn btn-default btn-secondary pr-5 pl-5" data-dismiss="modal">FECHAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        function showModal() {
+            $('#modalPreExportPdf').modal();
+            
+            var quizId = '';
+
+            {% if quiz_id %}
+                quizId = "{{ quiz_id }}";
+            {% endif %}
+
+            $("#idQuiz").val(quizId);
+        }
+        $(document).on('submit', '#preFormExportPdf', function (e) {
+            $('#modalPreExportPdf').modal('hide');
+        });
+    </script>
+    <script>        
+        document.getElementById('copiar-url-responder-quiz').addEventListener('click', (event) => {
+            var url = document.getElementById('value-copiar-url-responder-quiz').value;
+            var input = document.createElement("input");
+            input.value = url;
+            document.body.appendChild(input);
+            input.select();
+
+            document.execCommand('copy');
+            document.body.removeChild(input);
+        })
+    </script>
+    <script>
+        $("[data-toggle=tooltip]").tooltip();
+
+        $('#copiar-url-responder-quiz').tooltip({
+            title: 'Copiar',
+            placement: 'right',
+            trigger: 'hover'
+        });
+
+        $('#copiar-url-responder-quiz').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $('#copiar-url-responder-quiz').tooltip('dispose');
+            $('#copiar-url-responder-quiz').tooltip({
+                title: "Copiado!",
+                placement: 'right',
+                trigger: 'hover'
+            });
+            $('#copiar-url-responder-quiz').tooltip('show');
+        }).mouseleave(function(){
+            $('#copiar-url-responder-quiz').tooltip('dispose');
+            $('#copiar-url-responder-quiz').tooltip({title:'Copiar', placement: 'right', trigger: 'hover'});
+        });
+    
+    </script>
+    <script>
+        $(document).ready(function () {
+            enviarEmail();
+        });
+
+
+        $(".emails").select2({
+            placeholder: "E-mail(s)",
+            allowClear: true,
+            templateResult: function (option) {
+                return option.text;
+            },
+
+            templateSelection: function (option) {
+                return option.text;
+            },
+            tags: true,
+            multiple: true,
+            tokenSeparators: [';'],
+        });
+
+        function enviarEmail() {
+
+            $('#btn_enviar_emails').click(function (e) {
+
+                var emails = $('.emails').val();
+
+                if (emails && emails.length > 0) {
+                    $('#box-enviando').html('Enviando...');
+                    $('#box-enviando').show('fast');
+
+                    $.ajax({
+                        method: 'POST',
+                        data:
+                            {
+                                'emails': emails,
+                            },
+                        url: '/quizes/enviar-email/{{quiz_id}}',
+                        success: function success(data) {
+                            $('#box-enviando').html('Os e-mails foram enviados.');
+
+                            setTimeout(function() {
+                                $('#box-enviando').hide('slow');
+                            }, 3000);                            
+                        },
+                        error: function error(data) {
+                                $('#box-enviando').html('Erro ao enviar os e-mails.');
+
+                            setTimeout(function() {
+                                $('#box-enviando').hide('slow');
+                            }, 3000);
+                        }
+
+                    });
+                } else {
+                    alert('Informe um e-mail para o envio');
+                }
+
+            });
+        };
+    </script>
+{% endblock %}

@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-12">
+        <label>Posição do script</label>
+        {{ form_row(script.posicao) }}
+    </div>
+    
+    <div class="col-12">
+        <label>script</label>
+        <div class="d-flex flex-row">
+            {{ form_row(script.script) }}
+            <a href="#" id="deleteScript" class="remove-script btn shadow-default btn-danger ml-2" style="height: 38px;"><i class="fas fa-trash"></i></a>
+        </div> 
+    </div>
+    <div class="col-12"><hr></div>
+</div>    

@@ -1,0 +1,16 @@
+{% extends 'site.html.twig' %}
+
+{% block title %}QuizClass 2.0 - Soluções educationais e comerciais para seu curso presencial ou híbrido {% endblock %}
+
+{% block body %}
+    {% include 'menus/site_home.html.twig' %}
+    <div class="container pt-5" style="min-height: 100vh;">
+        <div class="pt-5" style="max-width: 800px; margin: auto">
+            <p>
+                Foi enviado um e-mail contendo um link no qual você pode clicar para redefinir sua senha. 
+                Este link irá expirar em {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+            </p>
+            <p>Se você não receber um e-mail, verifique sua pasta de spam ou <a href="{{ path('app_forgot_password_request') }}">tente novamente</a>.</p>
+        </div>
+    </div>
+{% endblock %}

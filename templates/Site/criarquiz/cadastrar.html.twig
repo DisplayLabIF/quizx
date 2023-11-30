@@ -1,0 +1,86 @@
+
+{% extends 'site.html.twig' %}
+{% block canonical %}<link rel="canonical" href="https://quizclass.com.br/criar-quiz/cadastrar"/>{% endblock %}
+{% block title %}{{ message }} | QuizClass 2.0{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .grecaptcha-badge { 
+            visibility: hidden;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+  {% include 'menus/site_empty.html.twig' %}
+  <div class="container p-5 text-center" style="min-height: 100vh;">
+    <section id="site_ajuda_criar_cadastrar">
+    {% if type != 'CRIAR_CONTA' %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('site_home') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Cadastro</li>
+            </ol>
+        </nav> 
+    {% endif %}
+     {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="alert alert-{{ label }} alert-dismissible fade show p-3">
+                        {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}   
+
+
+                <h1 class="pt-2">
+                    Criar conta
+                </h1>
+        <div style="max-width: 450px; margin: auto">
+            {{ form_start(form) }}
+                <input type="hidden" id="recaptchaToken" name="recaptchaToken">
+                {{ form_row(form.nome) }}
+                {{ form_row(form.email, {'id': 'email', 'full_name': 'email'}) }}
+                {{ form_row(form.contato.celular, {'id': 'celular-cadastro'}) }}
+                {{ form_row(form.password) }}
+                {{ form_row(form.tipoUsuario, {}) }}
+                {{ form_row(form.cadastrar_gratis, { 'attr': {'class': 'btn btn-block shadow-default btn-default m-2'} }) }}
+
+            {{ form_end(form) }}
+
+
+        </div>
+        <hr/>
+
+        <a href="/login/professor" title="Login">Já tenho um cadastro, <u>fazer login</u></a>
+        <br/>
+    </section>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const masks = {
+            phone(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/(\d{2})(\d)/, '($1) $2')
+                    .replace(/(\d{4})(\d)/, '$1-$2')
+                    .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+                    .replace(/(-\d{4})\d+?$/, '$1')
+            },
+        }
+
+        document.getElementById('celular-cadastro').oninput = e => {
+            e.target.value = masks['phone'](e.target.value)
+        }
+    </script>
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Notificações {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+    
+ {% block body %}
+<style>
+</style>
+    <div class="container pt-4">  
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-{{ label }} alert-dismissible fade show">
+                            {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}    
+
+        {{ include('app/minhaConta/nav.html.twig',{page: 'notificacao'}) }}
+
+        <div class="pt-4">
+            {{ form_start(form) }}
+                
+            {{ form_end(form) }}
+        </div>
+    </div>
+ {% endblock %}
+ 
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

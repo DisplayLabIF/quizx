@@ -1,0 +1,14 @@
+
+<h1>Minha conta</h1>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if page == 'dados_acesso' %}disabled active{% endif %}" href="{{ path('app_minha_conta_dados_acesso') }}">Dados de acesso</a>
+    </li>
+    {% if  app.user and app.user.tipo != 'ADM_QUIZ'%}
+        <li class="nav-item">
+            <a class="nav-link {% if page == 'meus_dados' %}disabled active{% endif %}" href="{{ path('app_minha_conta_meus_dados') }}">Meus dados</a>
+        </li>
+        
+    {% endif %}
+</ul>
+      

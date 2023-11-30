@@ -1,0 +1,59 @@
+security:
+  encoders:
+    App\Entity\User:
+      algorithm: auto
+
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  # session_fixation_strategy: migrate
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+    # used to reload user from session & other features (e.g. switch_user)
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    api:
+      pattern: ^/api
+      security: false
+      anonymous: true
+      lazy: true
+      provider: app_user_provider
+    aluno:
+      pattern: ^/(aluno|login/aluno|connect/aluno|logout|responder)
+      anonymous: true
+      lazy: true
+      provider: app_user_provider
+      guard:
+        authenticators:
+          - App\Security\LoginFormAuthenticator
+        entry_point: App\Security\LoginFormAuthenticator
+      form_login:
+        login_path: /
+        check_path: app_login
+      logout:
+        path: app_logout
+    app:
+      pattern: ^/(|app|admin|login/professor|connect/professor|logout|criar-quiz)
+      anonymous: true
+      lazy: true
+      provider: app_user_provider
+      guard:
+        authenticators:
+          - App\Security\LoginFormAuthenticator
+        entry_point: App\Security\LoginFormAuthenticator
+      form_login:
+        login_path: /
+        check_path: app_login
+      logout:
+        path: app_logout
+  access_control:
+    - { path: "^/login/aluno", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: "^/login/professor", roles: IS_ANONYMOUS }
+    - { path: "^/admin/", roles: [ROLE_ADMIN_QUIZ] }
+    - { path: "^/app/", roles: [ROLE_PROFESSOR, ROLE_ADMIN] }
+    - { path: "^/aluno/", roles: ROLE_ALUNO }
+    - { path: "^/responder", roles: IS_AUTHENTICATED_ANONYMOUSLY }

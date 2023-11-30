@@ -1,0 +1,125 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizX - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        .row{
+            padding: 15px;
+        }
+        .card-quiz, 
+        .card-nivelamento,
+        .card-lead{
+            width: 32%;
+            min-height: 136px;
+            margin-bottom: 40px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-lead{
+            background: #FDE9D0;
+            border-left: 4px solid #FD991F;
+        }
+        .card-quiz{
+            background: #86FFA8;
+            border-left: 4px solid #3ED167;
+        }
+        .card-nivelamento{
+            background: #B0F1FF;
+            border-left: 4px solid #41D0EF;
+        }
+        .quantidade-registros{
+            font-weight: 500;
+            font-size: 40px;
+            line-height: 47px;
+            margin-left: -3px;
+        }
+        .cards-info{
+            width: 150px;
+            font-size: 13px;
+            line-height: 15px;
+            margin: 0;
+        }
+        .card-title{
+            font-size: 15px;
+            line-height: 18px;
+            font-weight: 500;
+        }
+        .title{
+            font-size: 30px !important;
+        }
+
+        .card-criar-quiz{
+            background: rgba(255, 225, 50, 0.6);
+        }
+
+        
+        @media (max-width: 768px){
+            .card-quiz, 
+            .card-nivelamento,
+            .card-lead{
+                width: 100%;
+            }
+        }
+        @media (max-width: 425px){
+            table, th, td {
+                font-size: 0.90em;
+            }
+        }
+    </style>
+{% endblock %}
+    
+{% block body %}
+    <div class="pt-4">
+
+        {{ include('notifications/toast-notifications-flash-message.html.twig') }}
+
+
+        <div class="row">
+            <div class="mr-auto">
+                <h1 class="title">Olá, {{nome_usuario}}!</h1>
+            </div>
+            <div>
+                <a href="{{ path('app_criar_quiz') }}" class="btn btn-lg btn-dark shadow-default"><i class="fas fa-plus"></i> Criar Quiz</a>
+            </div>
+        </div>
+
+
+        <div class="row mt-3" style="padding-left: 15px;">
+            <div class="card card-lead mr-3">
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+                        <i class="fas fa-user-friends fa-2x mt-2"></i>
+                        <div class='ml-3'>
+                            <p class="card-title m-0">Alunos</p>
+                            <h5 class="card-text quantidade-registros" style="">{{ "%02d"|format(quantidade_leads) }}</h5>
+                            <p class="cards-info">Último cadastrado:<br>{{ultimoLeadCadastrado}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-quiz">
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+                        <i class="fas fa-check fa-2x mt-2"></i>
+                        <div class='ml-3'>
+                            <p class="card-title m-0">Quizzes respondidos</p>
+                            <h5 class="card-tex quantidade-registros">{{ "%02d"|format(quantidade_resposta_quizes) }}</h5>
+                            <p class="cards-info">Último respondido:<br>{{ultimoLeadRespostaQuiz}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        $('.toast').toast('show');
+    </script>
+{% endblock %}

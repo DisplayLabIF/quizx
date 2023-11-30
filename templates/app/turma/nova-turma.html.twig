@@ -1,0 +1,111 @@
+{% extends 'app.html.twig' %}
+    
+ {% block title %}QuizClass 2.0 - Meu Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+ {% block body %}
+    <div class="container pt-5 pb-5">
+        <a href="{{ path('app_curso_gerenciar', {'curso_id': curso_id}) }}"><i class="fas fa-chevron-left"></i> Voltar para gerenciamento do curso</a>
+        <h1 class="mt-2">Nova turma</h1>
+        {{ include('app/turma/_formTurma.html.twig') }}
+    </div>
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.getElementById('turma_cobrarMatricula').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('turma_valorMatricula').disabled = false;
+            } else {
+                document.getElementById('turma_valorMatricula').disabled = true;
+            }
+        })
+        document.getElementById('turma_condicaoEspecialAssinatura').addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                document.getElementById('turma_valorAssinaturaEspecial').disabled = false;
+                document.getElementById('turma_descricaoAssinaturaEspecial').disabled = false;
+            } else {
+                document.getElementById('turma_valorAssinaturaEspecial').disabled = true;
+                document.getElementById('turma_descricaoAssinaturaEspecial').disabled = true;
+            }
+        })
+        document.getElementById('turma_quantidadeAulas').addEventListener('input', (event) => {
+            if (parseInt(event.target.value) > 0 ) {
+                document.getElementById('turma-data-horario-aula').style.display = 'block';
+            } else {
+                document.getElementById('turma-data-horario-aula').style.display = 'none';
+            }
+        })
+    </script>
+    <script>
+        const masks = {
+            money(value){
+                return value
+                    .replace(/\D/g, '')
+                    .replace(/^([0-9]{3}\.?){3}-[0-9]{2}$/,"$1.$2")
+                    .replace(/(\d)(\d{2})$/,"$1,$2")
+            },
+        }
+
+        document.querySelectorAll('input').forEach(($input)=>{
+            const field = $input.dataset.js
+            
+            $input.addEventListener('input', (e)=>{
+                e.target.value = masks[field](e.target.value)
+            }, false)
+        })
+    </script>
+    <script>
+        
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of tags
+            var $collectionHolder = $('div.horarios');
+                
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            
+            $('.add_horaio_link').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                
+                // add a new tag form (see code block below)
+                addTagForm($collectionHolder);
+            });
+                
+                
+        });
+
+        function addTagForm($collectionHolder) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+            
+            // get the new index
+            var index = $collectionHolder.data('index');
+            
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<div class="row"></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+            
+            // handle the removal, just for this example
+            $('.remove-dia-semana').click(function(e) {
+                e.preventDefault();
+                
+                $(this).parent().parent().parent().remove();
+                
+                return false;
+            });
+
+        }
+    </script>
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

@@ -1,0 +1,63 @@
+
+<style>
+    .grecaptcha-badge { 
+        visibility: hidden;
+    }
+</style>
+<form method="post" action="/save-lead" class="row" id="form-lead" name="form-cadastro-gratis">
+    <input type="hidden" id="recaptchaToken" name="recaptchaToken">
+    <input type="hidden" data-privacy="true" name="privacy_policy" value="1">
+    <input type="hidden" data-privacy="true" name="terms_of_use" value="1">
+    <input type="hidden" name="plan" value={% if plan is defined %}{{ plan }}{% endif %}>
+    <input type="hidden" id="communications" type="checkbox" data-privacy="true" name="communications" value="1" checked>
+
+    <div class="col-12 col-md-12 col-lg-3 col-xl-3 mb-2">
+        <input type="text" class="form-control form-default shadow-default" name="nome" placeholder="Seu nome" required>
+    </div>
+    <div class="col-12 col-md-12 col-lg-3 col-xl-3 mb-2">
+        <input type="email" class="form-control form-default shadow-default" name="email" placeholder="Informe seu e-mail de trabalho" required>
+    </div>
+    <div class="col-12 col-md-12 col-lg-3 col-xl-3 mb-2">
+        <input id="celular-cadastro" type="text" class="form-control form-default shadow-default" name="celular" placeholder="Seu celular" required>
+    </div>
+    <div class="col-12 col-md-12 col-lg-3 col-xl-3 mb-2">
+        <button type="submit" class="btn btn-lg btn-default btn-primary shadow-default btn-block"><i class="fas fa-check"></i> Cadastre-se Grátis</button>
+    </div>
+</form>
+<p class="obs-cadastro-gratis m-0">
+    <span class="font-weight-bold">* Você não precisa cadastrar cartão de crédito no seu Teste Grátis. </span>
+    Ao enviar o formulário, você concorda com as <a href="{{ path('site_politica_privacidade')}}" target="_blank" title="Políticas de privacidade"><u>políticas de privacidade</u></a>
+</p>
+<small>Este site é protegido pelo reCAPTCHA e são aplicáveis a     
+    <a href="https://policies.google.com/privacy">Política de Privacidade</a> e os
+    <a href="https://policies.google.com/terms">Termos de Serviço</a> do Google.
+</small>
+
+<script>
+    const masks = {
+        phone(value){
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{4})(\d)/, '$1-$2')
+                .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+                .replace(/(-\d{4})\d+?$/, '$1')
+        },
+    }
+
+    document.getElementById('celular-cadastro').oninput = e => {
+        e.target.value = masks['phone'](e.target.value)
+    }
+</script>
+
+<script>
+    function onloadCallback() {
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6Lct_eAZAAAAANAKfkuC1jb0PpmiQ_fRYPPa20fY', {action: 'homepage'}).then(function(token) {
+                document.getElementById('recaptchaToken').value = token;
+            });
+        });
+    }
+</script>
+
+<script async src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=6Lct_eAZAAAAANAKfkuC1jb0PpmiQ_fRYPPa20fY"></script>

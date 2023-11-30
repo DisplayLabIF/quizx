@@ -1,0 +1,63 @@
+<style>
+    .footer{
+        background: #1D1D1F;
+        min-height: 100px;
+        top: calc(50vh - 70px);
+    }
+    .footer-text{
+        font-family: Rubik;
+        font-style: normal;
+        font-weight: normal;
+        color: #FFFFFF;
+    }
+</style>
+<footer class="footer col-md-12">
+    <br>
+    <div class="text-lg-left text-xl-left text-md-center text-sm-center footer-text">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-lg">
+                        <h5 class="text-warning">Sobre</h5>
+                        <small>
+                            <a href="#" style="color:white;">Sobre o Quiz Class</a></br>
+                            <a href="#" style="color:white;">Casos de sucesso</a></br>
+                            <a href="#" style="color:white;">Blog</a></br>
+                            <a href="#" style="color:white;">Parceiros</a></br>
+                            <a href="#" style="color:white;">Equipe</a></br>
+                            <a href="#" style="color:white;">Trabalhe conosco</a></br>
+                        </small>
+                    </div>
+                    <div class="col-lg">
+                        <h5 class="text-warning">Vendas</h5>
+                        <small>
+                            <a href="#" style="color:white;">38 3845-2098 - RAMAL 9</a></br>
+                            <a href="#" style="color:white;">Mandar um e-mail para a</a></br>
+                            <a href="#" style="color:white;">equipe de vendas</a></br>
+                            <a href="#" style="color:white;">Planos e preços</a></br>
+                            <a href="#" style="color:white;">Solicitar uma demonstração</a></br>
+                            <a href="#" style="color:white;">Governo</a></br>
+                        </small>
+                    </div>
+                    <div class="col-lg">
+                        <h5 class="text-warning">Suporte</h5>
+                        <small>
+                            <a href="#" style="color:white;">Fale conosco</a></br>
+                            <a href="#" style="color:white;">Teste o Quiz Class</a></br>
+                            <a href="#" style="color:white;">Integração</a></br>
+                            <a href="{{ path('site_politica_privacidade')}}" style="color:white;">Privacidade e Segurança</a></br>
+                            <a href="#" style="color:white;">Termos de uso</a></br>
+                            <a href="#" style="color:white;">LGPD</a></br>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <small>
+                    Copyright © {{ 'now' | date('Y') }}, Quiz Class. Todos os direitos reservados.
+                </small>
+            </div>
+        </div>
+    </div>
+    <br>
+</footer>

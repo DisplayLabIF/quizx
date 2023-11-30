@@ -1,0 +1,106 @@
+{% extends 'app.html.twig' %}
+    
+{% block title %}QuizClass 2.0 - Dashboard {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+    
+{% block body %}
+    <div class="pt-4">
+
+        <h1 class="title">Bem Vindo, {{app.user.nome}}!</h1>
+        <div  class="mt-5">
+            <h3>Quantidade de usuários cadastrados</h3>
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Últimos  60 dias</th>
+                        <th scope="col">Últimos  30 dias</th>
+                        <th scope="col">Últimos  15 dias</th>
+                        <th scope="col">Últimos  7 dias</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ qtd_cadastros.ultimos_60_dias }}</td>
+                        <td>{{ qtd_cadastros.ultimos_30_dias }}</td>
+                        <td>{{ qtd_cadastros.ultimos_15_dias }}</td>
+                        <td>{{ qtd_cadastros.ultimos_7_dias }}</td>
+                        <td align="right" colspan="3">
+                            Total de cadastros: <strong>{{ qtd_cadastros.total }}</strong>
+                        </td>
+                    </tr>
+                        
+                </tbody>
+            </table>
+            <h3 class="mt-5">Quantidade de quizzes criados</h3>
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Últimos 60 dias</th>
+                        <th scope="col">Últimos 30 dias</th>
+                        <th scope="col">Últimos 15 dias</th>
+                        <th scope="col">Últimos 7 dias</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ qtd_quizes.ultimos_60_dias }}</td>
+                        <td>{{ qtd_quizes.ultimos_30_dias }}</td>
+                        <td>{{ qtd_quizes.ultimos_15_dias }}</td>
+                        <td>{{ qtd_quizes.ultimos_7_dias }}</td>
+                        <td align="right" colspan="3">
+                            Total de quizzes: <strong>{{ qtd_quizes.total }}</strong>
+                        </td>
+                    </tr>
+                        
+                </tbody>
+            </table>   
+            <h3 class="mt-5">Último login feito</h3>
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">E-mail</th>
+                        <th scope="col">Tipo de usuário</th>
+                        <th scope="col">Último login</th>
+                        <th scope="col">Quantidade de logins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in pagination %}
+                        <tr>
+                            <td>{{ usuario.nome }}</td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{{ usuario.tipo }}</td>
+                            <td>
+                                {% if usuario.lastLogin != null %}
+                                    {{ usuario.lastLogin|date("d/m/Y H:i") }}
+                                {% else %}
+                                    - 
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ usuario.qtdLogin }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Nenhum usuário encontrado</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>   
+             <div class="navigation pb-5">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+        </div>     
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
